@@ -11,8 +11,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
-import com.artem.drawing.DrawingRawData;
-import com.artem.drawing.MotionData;
+import com.artem.client.drawing.DrawingRawData;
+import com.artem.client.drawing.MotionData;
 
 
 /**

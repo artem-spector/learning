@@ -6,12 +6,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.artem.client.ServerConnection;
+
 public class LearningApp extends ActionBarActivity {
+
+    private ServerConnection conn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning_app);
+        conn = new ServerConnection("http://localhost:8080");
     }
 
     @Override
@@ -37,10 +42,14 @@ public class LearningApp extends ActionBarActivity {
     }
 
     public void okPressed(View view) {
+        conn.sendDrawing(getDrawingSurfaceView().getData());
     }
 
     public void cancelPressed(View view) {
-        DrawingSurfaceView drawingSurfaceView = (DrawingSurfaceView) findViewById(R.id.drawingView);
-        drawingSurfaceView.clear();
+        getDrawingSurfaceView().clear();
+    }
+
+    private DrawingSurfaceView getDrawingSurfaceView() {
+        return (DrawingSurfaceView) findViewById(R.id.drawingView);
     }
 }

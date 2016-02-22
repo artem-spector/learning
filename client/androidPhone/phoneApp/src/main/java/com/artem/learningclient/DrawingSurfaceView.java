@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.artem.drawing.DrawingRawData;
+import com.artem.client.drawing.DrawingRawData;
 
 /**
  * created by artem on 1/23/16.
@@ -47,7 +47,11 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public void surfaceDestroyed(SurfaceHolder holder) {
         drawingProcessor.clearSurface();
     }
-    
+
+    public DrawingRawData getData() {
+        return rawData;
+    }
+
     public void clear() {
         drawingProcessor.clear();
     }
