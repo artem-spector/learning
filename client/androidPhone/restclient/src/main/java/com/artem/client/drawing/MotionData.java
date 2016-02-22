@@ -1,4 +1,4 @@
-package com.artem.drawing;
+package com.artem.client.drawing;
 
 import android.view.MotionEvent;
 
