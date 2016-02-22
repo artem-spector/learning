@@ -16,7 +16,7 @@ public class LearningApp extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning_app);
-        conn = new ServerConnection("http://localhost:8080");
+        conn = new ServerConnection(this);
     }
 
     @Override

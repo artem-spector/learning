@@ -1,7 +1,5 @@
 package com.artem.client.drawing;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +13,6 @@ public class DrawingRawData {
 
     public synchronized void add(MotionData[] newMotions) {
         motions.addAll(Arrays.asList(newMotions));
-        Log.d("RawData", "Added " + newMotions.length + "; total length " + motions.size());
     }
 
     public synchronized MotionData[] getMotions(int startIdx) {
@@ -25,7 +22,6 @@ public class DrawingRawData {
         MotionData[] res = new MotionData[len];
         for (int i = 0; i < res.length; i++)
             res[i] = motions.get(startIdx + i);
-        Log.d("RawData", "Got from " + startIdx + " length " + len);
         return res;
     }
 
