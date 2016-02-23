@@ -1,9 +1,7 @@
 package com.artem.learning.server;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * TODO: Document!
@@ -15,6 +13,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class ServerApp {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(ServerApp.class, args);
+        SpringApplication.run(ServerApp.class, args);
     }
 }
