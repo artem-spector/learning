@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.artem</groupId>
+    <artifactId>rest-server-api</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <android-m2-repository>/Library/Android/sdk/extras/android/m2repository</android-m2-repository>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>instal-jar-in-android-gradle-repo</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>target/${pom.artifactId}-${pom.version}.jar</file>
+                            <groupId>${pom.groupId}</groupId>
+                            <artifactId>${pom.artifactId}</artifactId>
+                            <packaging>${pom.packaging}</packaging>
+                            <version>${pom.version}</version>
+                            <localRepositoryPath>${env.HOME}${android-m2-repository}</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>instal-sources-in-android-gradle-repo</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>target/${pom.artifactId}-${pom.version}-sources.jar</file>
+                            <groupId>${pom.groupId}</groupId>
+                            <artifactId>${pom.artifactId}</artifactId>
+                            <packaging>${pom.packaging}</packaging>
+                            <version>${pom.version}</version>
+                            <classifier>sources</classifier>
+                            <localRepositoryPath>${env.HOME}${android-m2-repository}</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

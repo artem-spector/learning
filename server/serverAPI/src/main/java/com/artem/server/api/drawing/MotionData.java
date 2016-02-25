@@ -1,6 +1,4 @@
-package com.artem.client.drawing;
-
-import android.view.MotionEvent;
+package com.artem.server.api.drawing;
 
 /**
  * created by artem on 1/23/16.

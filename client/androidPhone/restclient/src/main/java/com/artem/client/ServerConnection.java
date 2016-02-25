@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.artem.client.drawing.DrawingRawData;
+import com.artem.server.api.drawing.DrawingRawData;
 
 import java.util.HashMap;
 import java.util.Map;

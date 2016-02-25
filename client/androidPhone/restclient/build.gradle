@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-
 android {
     compileSdkVersion 21
     buildToolsVersion "23.0.2"
@@ -23,4 +22,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:21.0.3'
     provided 'com.fasterxml.jackson.core:jackson-databind:2.7.1-1'
+    compile 'com.artem:rest-server-api:1.0-SNAPSHOT'
 }

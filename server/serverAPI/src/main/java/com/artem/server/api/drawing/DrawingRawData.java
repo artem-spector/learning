@@ -1,4 +1,4 @@
-package com.artem.client.drawing;
+package com.artem.server.api.drawing;
 
 import java.util.ArrayList;
 import java.util.Arrays;

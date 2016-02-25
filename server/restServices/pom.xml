@@ -25,6 +25,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.artem</groupId>
+            <artifactId>rest-server-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <properties>
