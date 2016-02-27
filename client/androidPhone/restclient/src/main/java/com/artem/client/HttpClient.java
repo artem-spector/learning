@@ -2,6 +2,8 @@ package com.artem.client;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,7 +21,9 @@ public class HttpClient {
     private static final String SERVER_IP = "10.0.0.10";
     private String serverUrl = "http://" + SERVER_IP + ":8080";
 
-    public HttpResponse post(String path, Map<String, String> params) {
+    private ObjectMapper mapper = new ObjectMapper();
+
+    public HttpResponse post(String path, Map<String, Object> params) {
         Log.d(getClass().getSimpleName(), "sending request to " + path);
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(serverUrl + path).openConnection();
@@ -29,9 +33,9 @@ public class HttpClient {
 
             OutputStream out = conn.getOutputStream();
             String str = "";
-            for (Map.Entry<String, String> entry : params.entrySet()) {
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
                 if (!str.isEmpty()) str += "&";
-                str += entry.getKey() + "=" + entry.getValue();
+                str += entry.getKey() + "=" + mapper.writeValueAsString(entry.getValue());
             }
             out.write(str.getBytes());
             out.flush();

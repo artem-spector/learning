@@ -31,11 +31,8 @@ public class ServerConnection {
                 @Override
                 protected Void doInBackground(DrawingRawData... params) {
                     Log.d(ServerConnection.class.getSimpleName(), "sending drawing");
-
-//                        String dataStr = new ObjectMapper().writeValueAsString(params[0]);
-                    String dataStr = "some str";
-                    Map<String, String> param = new HashMap<>();
-                    param.put("data", dataStr);
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("data", params[0]);
                     HttpResponse res = httpClient.post("/drawing", param);
 
                     if (res != null && res.status == 200)
