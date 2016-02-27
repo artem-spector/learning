@@ -9,7 +9,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <android-m2-repository>/Library/Android/sdk/extras/android/m2repository</android-m2-repository>
+        <!--<android-m2-repository>/Library/Android/sdk/extras/android/m2repository</android-m2-repository>-->
+        <android-m2-repository>/android-sdk-macosx/extras/android/m2repository</android-m2-repository>
     </properties>
 
     <build>
