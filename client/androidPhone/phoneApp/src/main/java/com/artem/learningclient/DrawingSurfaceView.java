@@ -7,7 +7,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.artem.client.drawing.DrawingRawData;
+import com.artem.server.api.drawing.DrawingRawData;
+
 
 /**
  * created by artem on 1/23/16.
