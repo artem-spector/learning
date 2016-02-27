@@ -13,6 +13,14 @@
         <android-m2-repository>/android-sdk-macosx/extras/android/m2repository</android-m2-repository>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.7.1-1</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
