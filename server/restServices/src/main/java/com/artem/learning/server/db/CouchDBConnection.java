@@ -1,5 +1,7 @@
 package com.artem.learning.server.db;
 
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.support.HttpRequestWrapper;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,6 +76,49 @@ public class CouchDBConnection {
 
     public void deleteObject(String dbName, String id, String revision) {
         new RestTemplate().delete(URL + "/" + dbName + "/" + id + "?rev=" + revision);
+    }
+
+    public <T> ViewResponse<T> findByKey(String dbName, String designDocName, String viewName, Class<T> cls, String startKey, String endKey) {
+        String url = URL + "/" + dbName + "/_design/" + designDocName + "/_view/" + viewName;
+        String queryParam = "";
+        if (startKey != null) queryParam += "startKey=" + startKey;
+        if (endKey != null) queryParam += "endKey=" + endKey;
+        if (!queryParam.isEmpty()) url += "?" + queryParam;
+
+        ValueDeserializer.setValueClass(cls);
+        ViewResponse response = new RestTemplate().getForObject(url, ViewResponse.class);
+        ValueDeserializer.removeValueClass();
+        return response;
+    }
+
+    public void setView(String dbName, String designDocName, String viewName, String mapFunctionFile, String reduceFunctionFile) {
+        Map design = getObject(dbName, "/_design/" + designDocName, Map.class);
+        if (design == null) {
+            design = new HashMap<>();
+            design.put("language", "javascript");
+        }
+
+        Map views = (Map) design.get("views");
+        if (views == null) {
+            views = new HashMap<>();
+            design.put("views", views);
+        }
+
+        Map view = (Map) views.get(viewName);
+        if (view == null) {
+            view = new HashMap<>();
+            views.put(viewName, view);
+        }
+
+        try {
+            view.put("map", IOUtils.toString(new ClassPathResource(mapFunctionFile).getInputStream()));
+            view.put("reduce", reduceFunctionFile == null ? null
+                    : IOUtils.toString(new ClassPathResource(reduceFunctionFile).getInputStream()));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read the contents of view functions", e);
+        }
+
+        new RestTemplate().put(URL + "/" + dbName + "/_design/" + designDocName, design);
     }
 
     private RestTemplate getRestTemplate(Map<String, String> requestHeaders) {

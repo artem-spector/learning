@@ -2,15 +2,14 @@ package com.artem.learning.server.db;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 /**
  * TODO: Document!
  *
  * @author artem
  *         Date: 2/27/16
  */
-public class FindResult<T> {
+public class ViewResponse<T> {
+
 
     @JsonProperty("total_rows")
     private int totalRows;
@@ -19,7 +18,7 @@ public class FindResult<T> {
     private int offset;
 
     @JsonProperty("rows")
-    private T[] rows;
+    private ViewRow<T>[] rows;
 
     public int getTotalRows() {
         return totalRows;
@@ -29,7 +28,7 @@ public class FindResult<T> {
         return offset;
     }
 
-    public T[] getRows() {
+    public ViewRow<T>[] getRows() {
         return rows;
     }
 }

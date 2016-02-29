@@ -1,13 +1,11 @@
 package com.artem.learning.server;
 
-import com.artem.learning.server.db.FindResult;
 import com.artem.learning.server.db.LearningDB;
 import com.artem.learning.server.model.Student;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 

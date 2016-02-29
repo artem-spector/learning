@@ -26,6 +26,12 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.artem</groupId>
             <artifactId>rest-server-api</artifactId>
             <version>1.0-SNAPSHOT</version>

@@ -49,7 +49,7 @@ public class CouchDBTest {
 
     @Test
     public void testCRUDEntity() {
-        String dbName = "test_users";
+        String dbName = "test_crud";
         try {
             CouchDBInfo db = dbClient.createDB(dbName);
             assertNotNull(db);
@@ -78,6 +78,33 @@ public class CouchDBTest {
 
             // 4. delete user and make sure the document doesn't exist
             dbClient.deleteObject(dbName, res.getId(), res.getRevision());
+        } finally {
+            dbClient.deleteDB(dbName);
+        }
+    }
+
+    @Test
+    public void testLookup() {
+        String dbName = "test_lookup";
+        try {
+            // 1. create DB and view
+            dbClient.createDB(dbName);
+            String designDocName = "users";
+            String viewName = "by_login_id";
+            dbClient.setView(dbName, designDocName, viewName, "db/design/usersByLoginId.js", null);
+
+            // 2. fill DB with users
+            int numUsers = 100;
+            for (int i = 0; i < numUsers; i++) {
+                dbClient.addObject(dbName, new User("usr" + i + "@mail.com", "User " + i));
+            }
+
+            // 2. lookup user
+            ViewResponse<User> res = dbClient.findByKey(dbName, designDocName, viewName, User.class, null, null);
+            assertEquals(numUsers, res.getTotalRows());
+            User user = res.getRows()[3].getValue();
+            assertEquals("User 11", user.getDisplayName());
+
         } finally {
             dbClient.deleteDB(dbName);
         }
