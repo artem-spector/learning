@@ -1,6 +1,5 @@
 package com.artem.learning.server.db;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -8,28 +7,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author artem on 2/28/16.
  */
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CouchDBInfo {
 
-    @JsonProperty("couchdb")
-    private String welcomePhrase;
+    @JsonProperty("db_name")
+    private String dbName;
 
-    @JsonProperty("uuid")
-    private String id;
+    @JsonProperty("data_size")
+    private int dataSize;
 
-    @JsonProperty("version")
-    private String version;
+    @JsonProperty("doc_count")
+    private int documentCount;
 
-    public String getWelcomePhrase() {
-        return welcomePhrase;
+    public String getDbName() {
+        return dbName;
     }
 
-    public String getId() {
-        return id;
+    public int getDataSize() {
+        return dataSize;
     }
 
-    public String getVersion() {
-        return version;
+    public int getDocumentCount() {
+        return documentCount;
     }
 }

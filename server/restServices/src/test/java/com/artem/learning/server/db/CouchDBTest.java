@@ -8,8 +8,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * TODO: Document!
@@ -26,21 +25,62 @@ public class CouchDBTest {
 
     @Test
     public void testCreateDeleteDB() {
-        CouchDBInfo dbInfo = dbClient.getDBInfo();
+        CouchDBConnectionInfo dbInfo = dbClient.getConnectionInfo();
         assertNotNull(dbInfo);
+        assertNotNull(dbInfo.getId());
+        assertNotNull(dbInfo.getVersion());
+        assertNotNull(dbInfo.getWelcomePhrase());
 
-        String dbName = "testtest";
-        CouchDB database = dbClient.getDB(dbName);
-        assertNull(database);
+        String dbName = "test_db";
+        CouchDBInfo database;
+        try {
+            database = dbClient.getDB(dbName);
+            assertNull(database);
 
-        dbClient.createDB(dbName);
-        database = dbClient.getDB(dbName);
-        assertNotNull(database);
-
-        dbClient.deleteDB(dbName);
-        database = dbClient.getDB(dbName);
-        assertNull(database);
+            dbClient.createDB(dbName);
+            database = dbClient.getDB(dbName);
+            assertNotNull(database);
+        } finally {
+            dbClient.deleteDB(dbName);
+            database = dbClient.getDB(dbName);
+            assertNull(database);
+        }
     }
 
+    @Test
+    public void testCRUDEntity() {
+        String dbName = "test_users";
+        try {
+            CouchDBInfo db = dbClient.createDB(dbName);
+            assertNotNull(db);
+            assertEquals(0, db.getDocumentCount());
+
+            // 1. get user by a wrong id and get null
+            User retrieved = dbClient.getObject(dbName, "wrong-id", User.class);
+            assertNull(retrieved);
+
+            // 2. create user and store it
+            User original = new User("user1@somemail.com", "Mr. Smith");
+            UpdateResponse res = dbClient.addObject(dbName, original);
+            assertTrue(res.isSuccess());
+            assertEquals(1, dbClient.getDB(dbName).getDocumentCount());
+
+            // 2. get user by correct id and compare with original one
+            retrieved = dbClient.getObject(dbName, res.getId(), User.class);
+            assertEquals(original, retrieved);
+
+            // 3. update user
+            original = new User("someOther@anothermail.com", "James Bond");
+            res = dbClient.updateObject(dbName, res.getId(), res.getRevision(), original);
+            assertTrue(res.isSuccess());
+            retrieved = dbClient.getObject(dbName, res.getId(), User.class);
+            assertEquals(original, retrieved);
+
+            // 4. delete user and make sure the document doesn't exist
+            dbClient.deleteObject(dbName, res.getId(), res.getRevision());
+        } finally {
+            dbClient.deleteDB(dbName);
+        }
+    }
 
 }
