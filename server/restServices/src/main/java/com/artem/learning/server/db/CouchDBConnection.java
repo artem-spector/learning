@@ -81,8 +81,8 @@ public class CouchDBConnection {
     public <T> ViewResponse<T> findByKey(String dbName, String designDocName, String viewName, Class<T> cls, String startKey, String endKey) {
         String url = URL + "/" + dbName + "/_design/" + designDocName + "/_view/" + viewName;
         String queryParam = "";
-        if (startKey != null) queryParam += "startKey=" + startKey;
-        if (endKey != null) queryParam += "endKey=" + endKey;
+        if (startKey != null) queryParam += "startkey=\"" + startKey + "\"";
+        if (endKey != null) queryParam += "endkey=\"" + endKey + "\"";
         if (!queryParam.isEmpty()) url += "?" + queryParam;
 
         ValueDeserializer.setValueClass(cls);

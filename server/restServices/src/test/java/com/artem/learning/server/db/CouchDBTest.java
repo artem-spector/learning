@@ -99,11 +99,15 @@ public class CouchDBTest {
                 dbClient.addObject(dbName, new User("usr" + i + "@mail.com", "User " + i));
             }
 
-            // 2. lookup user
+            // 2. lookup all users and check that the 3rd element is user 11 (alphabetical order)
             ViewResponse<User> res = dbClient.findByKey(dbName, designDocName, viewName, User.class, null, null);
-            assertEquals(numUsers, res.getTotalRows());
+            assertEquals(numUsers, res.getRows().length);
             User user = res.getRows()[3].getValue();
             assertEquals("User 11", user.getDisplayName());
+
+            // 3. lookup users from 50 and get 54: 50 - 99 + 6,7,8,9
+            res = dbClient.findByKey(dbName, designDocName, viewName, User.class, "usr50", null);
+            assertEquals(54, res.getRows().length);
 
         } finally {
             dbClient.deleteDB(dbName);
