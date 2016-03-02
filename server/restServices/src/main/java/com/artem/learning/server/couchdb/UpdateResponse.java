@@ -1,6 +1,8 @@
-package com.artem.learning.server.db;
+package com.artem.learning.server.couchdb;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.http.HttpStatus;
 
 /**
  * TODO: Document!
@@ -18,6 +20,17 @@ public class UpdateResponse {
     @JsonProperty("rev")
     private String revision;
 
+    @JsonIgnore
+    private HttpStatus status;
+
+    public UpdateResponse() {
+    }
+
+    public UpdateResponse(boolean success, HttpStatus status) {
+        this.success = success;
+        this.status = status;
+    }
+
     public String getId() {
         return id;
     }
@@ -28,5 +41,9 @@ public class UpdateResponse {
 
     public String getRevision() {
         return revision;
+    }
+
+    public boolean isConflict() {
+        return HttpStatus.CONFLICT.equals(status);
     }
 }

@@ -1,4 +1,4 @@
-package com.artem.learning.server.db;
+package com.artem.learning.server.couchdb;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CouchDBConnectionInfo {
+public class ConnectionInfo {
 
     @JsonProperty("couchdb")
     private String welcomePhrase;

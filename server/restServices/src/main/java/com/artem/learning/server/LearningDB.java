@@ -1,4 +1,4 @@
-package com.artem.learning.server.db;
+package com.artem.learning.server;
 
 import com.artem.learning.server.model.UniqueEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;

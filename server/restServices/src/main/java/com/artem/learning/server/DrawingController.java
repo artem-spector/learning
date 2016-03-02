@@ -1,6 +1,5 @@
 package com.artem.learning.server;
 
-import com.artem.learning.server.db.LearningDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

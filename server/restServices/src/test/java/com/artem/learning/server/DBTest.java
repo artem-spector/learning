@@ -1,6 +1,5 @@
 package com.artem.learning.server;
 
-import com.artem.learning.server.db.LearningDB;
 import com.artem.learning.server.model.Student;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,4 +1,4 @@
-package com.artem.learning.server.db;
+package com.artem.learning.server.couchdb;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

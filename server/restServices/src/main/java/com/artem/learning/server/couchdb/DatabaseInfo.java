@@ -1,4 +1,4 @@
-package com.artem.learning.server.db;
+package com.artem.learning.server.couchdb;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author artem on 2/28/16.
  */
-public class CouchDBInfo {
+public class DatabaseInfo {
 
     @JsonProperty("db_name")
     private String dbName;
