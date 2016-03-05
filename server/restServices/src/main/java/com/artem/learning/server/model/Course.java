@@ -8,6 +8,9 @@ package com.artem.learning.server.model;
  */
 public interface Course {
 
-    Lesson beginLesson(Student student);
+    String getId();
 
+    String getDisplayName();
+
+    Lesson prepareNewLesson(CourseHistory history);
 }

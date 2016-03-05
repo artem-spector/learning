@@ -35,6 +35,7 @@ public abstract class Document {
     public void updatePersistentProperties(UpdateDocumentResponse res) {
         assert res.isSuccess();
         assert id == null || id.equals(res.getId());
+        if (id == null) id = res.getId();
         revision = res.getRevision();
     }
 }

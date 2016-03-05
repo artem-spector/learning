@@ -11,13 +11,16 @@ public class MotionData {
     public enum MotionType {Up, Down, Move}
 
     @JsonProperty("m")
-    public final MotionType motion;
+    public MotionType motion;
     @JsonProperty("t")
-    public final long time;
+    public long time;
     @JsonProperty("x")
-    public final float x;
+    public float x;
     @JsonProperty("y")
-    public final float y;
+    public float y;
+
+    public MotionData() {
+    }
 
     @JsonIgnore
     public MotionData(long time, float x, float y, MotionType motion) {

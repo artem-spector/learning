@@ -1,5 +1,6 @@
 package com.artem.learning.server;
 
+import com.artem.learning.server.couchdb.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,10 @@ public class DrawingController {
     private static final Logger logger = LoggerFactory.getLogger(DrawingController.class);
 
     @Autowired
-    private LearningDB db;
+    private Database db;
 
     @RequestMapping(path = "/drawing", method = RequestMethod.POST)
     public String sendDrawing(@RequestParam("data") String drawingStr) {
-        db.addDrawing(drawingStr);
         return "OK";
     }
 }
