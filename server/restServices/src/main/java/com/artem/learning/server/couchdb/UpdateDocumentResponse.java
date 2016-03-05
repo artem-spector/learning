@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author artem on 2/28/16.
  */
-public class UpdateResponse {
+public class UpdateDocumentResponse {
 
     @JsonProperty("id")
     private String id;
@@ -23,10 +23,10 @@ public class UpdateResponse {
     @JsonIgnore
     private HttpStatus status;
 
-    public UpdateResponse() {
+    public UpdateDocumentResponse() {
     }
 
-    public UpdateResponse(boolean success, HttpStatus status) {
+    public UpdateDocumentResponse(boolean success, HttpStatus status) {
         this.success = success;
         this.status = status;
     }
@@ -45,5 +45,9 @@ public class UpdateResponse {
 
     public boolean isConflict() {
         return HttpStatus.CONFLICT.equals(status);
+    }
+
+    public HttpStatus getStatus() {
+        return status;
     }
 }

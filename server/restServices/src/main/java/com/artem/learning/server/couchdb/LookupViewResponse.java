@@ -8,8 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author artem
  *         Date: 2/27/16
  */
-public class ViewResponse<T> {
-
+public class LookupViewResponse<T> {
 
     @JsonProperty("total_rows")
     private int totalRows;

@@ -9,8 +9,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * CouchDB client with jackson serialization/deserialization
@@ -51,11 +49,27 @@ public class Database {
         getRestTemplate().delete(dbUrl());
     }
 
-    public UpdateResponse addDocument(Object obj) {
-        return getRestTemplate().postForObject(dbUrl(), obj, UpdateResponse.class);
+    /**
+     * Add a new document to the DB.
+     *
+     * @param doc the document to be added. In case of success its persistent fields <code>id</code> and <code>revision</code> are updated.
+     * @return the insert response
+     */
+    public UpdateDocumentResponse addDocument(Document doc) {
+        UpdateDocumentResponse res = getRestTemplate().postForObject(dbUrl(), doc, UpdateDocumentResponse.class);
+        if (res.isSuccess()) doc.updatePersistentProperties(res);
+        return res;
     }
 
-    public <T> T getDocument(String id, Class<T> cls) {
+    /**
+     * Retrieve a document by id.
+     *
+     * @param id  document id
+     * @param cls document class
+     * @param <T> document type as defined by cls parameter
+     * @return the retrieved document of given type, null if the id does not exist
+     */
+    public <T extends Document> T getDocument(String id, Class<T> cls) {
         try {
             return getRestTemplate().getForObject(dbUrl() + "/" + id, cls);
         } catch (HttpStatusCodeException e) {
@@ -66,71 +80,43 @@ public class Database {
         }
     }
 
-    public UpdateResponse updateDocument(String id, String revision, Object obj) {
-        String[] revisionHeader = {"If-Match", revision};
+    /**
+     * Update the document in the DB.
+     *
+     * @param doc the document to updated. In case of success its persistent fields <code>revision</code> is updated.
+     * @return the update response
+     */
+    public UpdateDocumentResponse updateDocument(Document doc) {
+        String[] revisionHeader = null;
+        if (doc.getRevision() != null) {
+            revisionHeader = new String[]{"If-Match", doc.getRevision()};
+        }
         try {
-            ResponseEntity<UpdateResponse> responseEntity = getRestTemplate(revisionHeader)
-                    .exchange(dbUrl() + "/" + id, HttpMethod.PUT, new HttpEntity<>(obj), UpdateResponse.class);
-            return responseEntity.getBody();
+            ResponseEntity<UpdateDocumentResponse> responseEntity = getRestTemplate(revisionHeader)
+                    .exchange(dbUrl() + "/" + doc.getId(), HttpMethod.PUT, new HttpEntity<>(doc), UpdateDocumentResponse.class);
+            UpdateDocumentResponse res = responseEntity.getBody();
+            if (res.isSuccess()) doc.updatePersistentProperties(res);
+            return res;
         } catch (HttpStatusCodeException e) {
-            return new UpdateResponse(false, e.getStatusCode());
+            return new UpdateDocumentResponse(false, e.getStatusCode());
         }
     }
 
-    public UpdateResponse deleteDocument(String id, String revision) {
+    public UpdateDocumentResponse deleteDocument(Document doc) {
         try {
-            String[] revisionHeader = {"If-Match", revision};
-            getRestTemplate(revisionHeader).delete(dbUrl() + "/" + id + "?rev=" + revision);
-            return new UpdateResponse(true, null);
+            String[] revisionHeader = {"If-Match", doc.getRevision()};
+            getRestTemplate(revisionHeader).delete(dbUrl() + "/" + doc.getId());
+            return new UpdateDocumentResponse(true, null);
         } catch (HttpStatusCodeException e) {
-            return new UpdateResponse(false, e.getStatusCode());
+            return new UpdateDocumentResponse(false, e.getStatusCode());
         }
     }
 
-    public <T> ViewResponse<T> findByKey(String designDocName, String viewName, Class<T> cls, String startKey, String endKey) {
-        String url = dbUrl() + "/_design/" + designDocName + "/_view/" + viewName;
-        String queryParam = "";
-        if (startKey != null) queryParam += "startkey=\"" + startKey + "\"";
-        if (endKey != null) queryParam += "endkey=\"" + endKey + "\"";
-        if (!queryParam.isEmpty()) url += "?" + queryParam;
-
-        ValueDeserializer.setValueClass(cls);
-        ViewResponse response = getRestTemplate().getForObject(url, ViewResponse.class);
-        ValueDeserializer.removeValueClass();
-        return response;
+    public <T> View<T> getView(String designDocName, String viewName, Class<T> valueClass) {
+        return new View<>(this, designDocName, viewName, valueClass);
     }
 
-
-    public void createOrUpdateDesignDocument(String designDocName, ViewDefinition... viewDefinitions) {
-        String id = "/_design/" + designDocName;
-        Map design = getDocument(id, Map.class);
-        String revision = design == null ? null : (String) design.get("_rev");
-
-        if (design == null) {
-            design = new HashMap<>();
-            design.put("language", "javascript");
-        }
-
-        Map views = (Map) design.get("views");
-        if (views == null) {
-            views = new HashMap<>();
-            design.put("views", views);
-        }
-
-        for (ViewDefinition definition : viewDefinitions) {
-            Map view = (Map) views.get(definition.name);
-            if (view == null) {
-                view = new HashMap<>();
-                views.put(definition.name, view);
-            }
-            view.put("map", definition.getMapFunction());
-            view.put("reduce", definition.getReduceFunction());
-        }
-
-        updateDocument(id, revision, design);
-    }
-
-    private RestTemplate getRestTemplate(String[]... requestHeaders) {
+    RestTemplate getRestTemplate(String[]... requestHeaders) {
         RestTemplate res = new RestTemplate();
         if (requestHeaders != null) {
             res.setInterceptors(Collections.singletonList((ClientHttpRequestInterceptor) (request, body, execution) -> {
@@ -145,7 +131,7 @@ public class Database {
         return res;
     }
 
-    private String dbUrl() {
+    String dbUrl() {
         return couchDB + "/" + dbName;
     }
 }

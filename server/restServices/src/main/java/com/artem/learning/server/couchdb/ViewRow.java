@@ -10,29 +10,28 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  */
 public class ViewRow<T> {
 
-    public static final String ELEMENT_CLASS = "rowElementClass";
-
     @JsonProperty("id")
     private String documentId;
 
     @JsonProperty("key")
-    private String key;
+    private Object key;
 
     @JsonProperty("value")
-    @JsonDeserialize(using = ValueDeserializer.class)
+    @JsonDeserialize(using = ViewRowValueDeserializer.class)
     private T value;
 
     public String getDocumentId() {
         return documentId;
     }
 
-    public String getKey() {
+    public Object getKey() {
         return key;
     }
 
     public T getValue() {
         return value;
     }
+
 }
 
 

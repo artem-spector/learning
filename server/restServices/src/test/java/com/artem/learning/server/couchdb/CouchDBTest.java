@@ -56,35 +56,29 @@ public class CouchDBTest {
             assertNull(retrieved);
 
             // 2. create user and store it
-            User original = new User("user1@somemail.com", "Mr. Smith");
-            UpdateResponse success = database.addDocument(original);
+            User user = new User("user1@somemail.com", "Mr. Smith");
+            UpdateDocumentResponse success = database.addDocument(user);
             assertTrue(success.isSuccess());
-            String firstRevision = success.getRevision();
             assertEquals(1, database.getDatabaseInfo().getDocumentCount());
 
             // 2. get user by correct id and compare with original one
             retrieved = database.getDocument(success.getId(), User.class);
-            assertEquals(original, retrieved);
+            assertEquals(user, retrieved);
 
             // 3. update user with revision
-            original = new User("someOther@anothermail.com", "James Bond");
-            success = database.updateDocument(success.getId(), success.getRevision(), original);
+            user.setLoginId("someOther@anothermail.com");
+            user.setDisplayName("James Bond");
+            success = database.updateDocument(user);
             assertTrue(success.isSuccess());
             retrieved = database.getDocument(success.getId(), User.class);
-            assertEquals(original, retrieved);
-
-            // 3.5 update user with wrong revision and fail
-            original = new User("someOtherModified@anothermail.com", "Bond, James Bond");
-            UpdateResponse fail = database.updateDocument(success.getId(), firstRevision, original);
-            assertFalse(fail.isSuccess());
-            assertTrue(fail.isConflict());
+            assertEquals(user, retrieved);
 
             // 4. delete user and make sure the document doesn't exist
-            UpdateResponse deleted = database.deleteDocument(success.getId(), success.getRevision());
+            UpdateDocumentResponse deleted = database.deleteDocument(user);
             assertTrue(deleted.isSuccess());
             assertNull(database.getDocument(success.getId(), User.class));
             // delete again and fail
-            deleted = database.deleteDocument(success.getId(), success.getRevision());
+            deleted = database.deleteDocument(user);
             assertFalse(deleted.isSuccess());
         } finally {
             database.deleteDB();
@@ -98,9 +92,13 @@ public class CouchDBTest {
             database.createDB();
             String designDocName = "users";
             String viewName = "by_login_id";
-            database.createOrUpdateDesignDocument(designDocName, new ViewDefinition(viewName, "db/design/usersByLoginId.js", null));
+            DesignDocument doc = new DesignDocument(designDocName, "javascript",
+                    new ViewDefinition(viewName, "db/design/usersByLoginId.js", null));
+            UpdateDocumentResponse response = database.updateDocument(doc);
+            assertTrue(response.isSuccess());
             // do it again to make sure update works as well
-            database.createOrUpdateDesignDocument(designDocName, new ViewDefinition(viewName, "db/design/usersByLoginId.js", null));
+            response = database.updateDocument(doc);
+            assertTrue(response.isSuccess());
 
             // 2. fill DB with users
             int numUsers = 100;
@@ -109,18 +107,36 @@ public class CouchDBTest {
             }
 
             // 2. lookup all users and check that the 3rd element is user 11 (alphabetical order)
-            ViewResponse<User> res = database.findByKey(designDocName, viewName, User.class, null, null);
+            View<User> usersByLoginId = database.getView(designDocName, viewName, User.class);
+            LookupViewResponse<User> res = usersByLoginId.lookup(null, null);
             assertEquals(numUsers, res.getRows().length);
             User user = res.getRows()[3].getValue();
             assertEquals("User 11", user.getDisplayName());
 
             // 3. lookup users from 50 and get 54: 50 - 99 + 6,7,8,9
-            res = database.findByKey(designDocName, viewName, User.class, "usr50", null);
+            res = usersByLoginId.lookup("usr50", null);
             assertEquals(54, res.getRows().length);
 
+            // 4. lookup user 50, update it, and lookup again
+            ViewRow<User> row = findUser(usersByLoginId, "usr50@mail.com");
+            user = row.getValue();
+            assertEquals("User 50", user.getDisplayName());
+
+            user.setDisplayName("Bond");
+            response = database.updateDocument(user);
+            assertTrue(response.isSuccess());
+
+            row = findUser(usersByLoginId, "usr50@mail.com");
+            user = row.getValue();
+            assertEquals("Bond", user.getDisplayName());
         } finally {
             database.deleteDB();
         }
     }
 
+    private ViewRow<User> findUser(View<User> view, String key) {
+        LookupViewResponse<User> res = view.lookup(key, key);
+        assertEquals(1, res.getRows().length);
+        return res.getRows()[0];
+    }
 }

@@ -9,7 +9,7 @@ import java.util.Arrays;
  *
  * @author artem on 2/28/16.
  */
-public class User {
+public class User extends Document {
 
     @JsonProperty("login_id")
     private String loginId;
@@ -21,7 +21,6 @@ public class User {
     }
 
     public User(String loginId, String displayName) {
-
         this.loginId = loginId;
         this.displayName = displayName;
     }
@@ -30,8 +29,16 @@ public class User {
         return loginId;
     }
 
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
     public String getDisplayName() {
         return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     @Override
