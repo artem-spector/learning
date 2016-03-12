@@ -36,6 +36,10 @@ public class StudentsDao {
         return res;
     }
 
+    public Student getStudent(String studentId) {
+        return db.getDocument(studentId, Student.class);
+    }
+
     public UpdateDocumentResponse updateStudent(Student inStudent, String id) {
         assert id != null;
         Student student = db.getDocument(id, Student.class);

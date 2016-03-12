@@ -40,7 +40,7 @@ public class StudentsAdminController {
             return ResponseEntity.status(response.getStatus()).body("Student creation failed");
     }
 
-    @RequestMapping(path = "/{studentId}",method = RequestMethod.PUT)
+    @RequestMapping(path = "/{studentId}", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<String> updateStudent(@RequestBody Student inStudent, @PathVariable String studentId) {
         UpdateDocumentResponse response = dao.updateStudent(inStudent, studentId);
@@ -50,7 +50,7 @@ public class StudentsAdminController {
             return ResponseEntity.status(response.getStatus()).body("Student update failed");
     }
 
-    @RequestMapping(path = "/{studentId}",method = RequestMethod.DELETE)
+    @RequestMapping(path = "/{studentId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity<String> deleteStudent(@PathVariable String studentId) {
         UpdateDocumentResponse response = dao.deleteStudent(studentId);
@@ -64,6 +64,12 @@ public class StudentsAdminController {
     @ResponseBody
     public List<Student> getStudents() {
         return dao.getAllStudents();
+    }
+
+    @RequestMapping(path = "/{studentId}", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public Student getStudent(@PathVariable String studentId) {
+        return dao.getStudent(studentId);
     }
 
 }

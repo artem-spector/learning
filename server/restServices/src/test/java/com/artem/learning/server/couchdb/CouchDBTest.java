@@ -24,39 +24,21 @@ public class CouchDBTest {
     @Autowired
     private Database database;
 
-    @Before
-    public void createDB() {
-        if (database.getDatabaseInfo() != null) database.deleteDB();
-        database.createDB();
-    }
-
-    @Test
-    public void testCreateDeleteDB() {
-        ConnectionInfo info = database.getConnectionInfo();
-        assertNotNull(info);
-        assertNotNull(info.getId());
-        assertNotNull(info.getVersion());
-        assertNotNull(info.getWelcomePhrase());
-
-        DatabaseInfo databaseInfo = database.getDatabaseInfo();
-        assertNotNull(databaseInfo);
-    }
-
     @Test
     public void testCRUDEntity() {
         DatabaseInfo db = database.getDatabaseInfo();
         assertNotNull(db);
-        assertEquals(0, db.getDocumentCount());
 
         // 1. get user by a wrong id and get null
         User retrieved = database.getDocument("wrong-id", User.class);
         assertNull(retrieved);
 
         // 2. create user and store it
+        int documentCount = database.getDatabaseInfo().getDocumentCount();
         User user = new User("user1@somemail.com", "Mr. Smith");
         UpdateDocumentResponse success = database.addDocument(user);
         assertTrue(success.isSuccess());
-        assertEquals(1, database.getDatabaseInfo().getDocumentCount());
+        assertEquals(1, database.getDatabaseInfo().getDocumentCount() - documentCount);
 
         // 2. get user by correct id and compare with original one
         retrieved = database.getDocument(success.getId(), User.class);

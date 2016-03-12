@@ -57,13 +57,14 @@ public class StudentsAdminTest {
     public void studentCRUDTest() throws Exception {
         // 1. no students
         List<Map<String, Object>> allStudents = getAllStudents();
-        assertEquals(0, allStudents.size());
+        int numStudents = allStudents.size();
 
         // 2. create a student, no courses
         createStudent("James", "Bond", "1900-01-04", "male");
         allStudents = getAllStudents();
-        assertEquals(1, allStudents.size());
-        Map<String, Object> student = allStudents.get(0);
+        assertEquals(1, allStudents.size() - numStudents);
+        Map<String, Object> student = allStudents.get(allStudents.size() - 1);
+        String studentId = (String) student.get("studentId");
         Map<String, Object> courses = (Map<String, Object>) student.get("courses");
         assertEquals(0, courses.size());
 
@@ -80,20 +81,20 @@ public class StudentsAdminTest {
         assignment.put("assignedAt", DateTimeUtil.formatDateOnly(new Date()));
 
         updateStudent(student);
-        student = getAllStudents().get(0);
+        student = getStudent(studentId);
         courses = (Map<String, Object>) student.get("courses");
         assertEquals(1, courses.size());
 
         // 4. remove course from student
         courses.remove(courseId);
         updateStudent(student);
-        student = getAllStudents().get(0);
+        student = getStudent(studentId);
         courses = (Map<String, Object>) student.get("courses");
         assertEquals(0, courses.size());
 
         // 5.delete student
         deleteStudent(student);
-        assertEquals(0, getAllStudents().size());
+        assertEquals(numStudents, getAllStudents().size());
     }
 
     private void createStudent(String firstName, String lastName, String birthDate, String gender) throws Exception {
@@ -104,6 +105,16 @@ public class StudentsAdminTest {
                 .param("gender", gender))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    private Map<String, Object> getStudent(String studentId) throws Exception {
+        MvcResult result = mvc.perform(get(StudentsAdminController.ADMIN_STUDENTS_PATH + "/" + studentId)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+
+        String str = result.getResponse().getContentAsString();
+        JavaType mapType = TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Object.class);
+        return new ObjectMapper().readValue(str, mapType);
     }
 
     private void updateStudent(Map<String, Object> student) throws Exception {

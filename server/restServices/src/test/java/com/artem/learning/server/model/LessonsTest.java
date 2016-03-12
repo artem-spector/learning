@@ -35,8 +35,6 @@ public class LessonsTest {
 
     @Before
     public void setUp() {
-        if (db.getDatabaseInfo() != null) db.deleteDB();
-        db.createDB();
         Calendar calendar = Calendar.getInstance();
         calendar.set(1900, Calendar.JANUARY, 4);
         student = new Student("James", "Bond", calendar.getTime(), Student.Gender.male);
