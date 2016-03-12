@@ -1,9 +1,6 @@
 package com.artem.learning.server.dao;
 
-import com.artem.learning.server.couchdb.Database;
-import com.artem.learning.server.couchdb.LookupViewResponse;
-import com.artem.learning.server.couchdb.UpdateDocumentResponse;
-import com.artem.learning.server.couchdb.ViewRow;
+import com.artem.learning.server.couchdb.*;
 import com.artem.learning.server.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,4 +36,15 @@ public class StudentsDao {
         return res;
     }
 
+    public UpdateDocumentResponse updateStudent(Student inStudent, String id) {
+        assert id != null;
+        Student student = db.getDocument(id, Student.class);
+        student.updateFrom(inStudent);
+        return db.updateDocument(student);
+    }
+
+    public UpdateDocumentResponse deleteStudent(String studentId) {
+        Student student = db.getDocument(studentId, Student.class);
+        return db.deleteDocument(student);
+    }
 }

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -40,10 +40,30 @@ public class StudentsAdminController {
             return ResponseEntity.status(response.getStatus()).body("Student creation failed");
     }
 
+    @RequestMapping(path = "/{studentId}",method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<String> updateStudent(@RequestBody Student inStudent, @PathVariable String studentId) {
+        UpdateDocumentResponse response = dao.updateStudent(inStudent, studentId);
+        if (response.isSuccess())
+            return ResponseEntity.ok("ok");
+        else
+            return ResponseEntity.status(response.getStatus()).body("Student update failed");
+    }
+
+    @RequestMapping(path = "/{studentId}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity<String> deleteStudent(@PathVariable String studentId) {
+        UpdateDocumentResponse response = dao.deleteStudent(studentId);
+        if (response.isSuccess())
+            return ResponseEntity.ok("ok");
+        else
+            return ResponseEntity.status(response.getStatus()).body("Student delete failed");
+    }
+
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<Student> getStudents() {
-        List<Student> allStudents = dao.getAllStudents();
-        return allStudents;
+        return dao.getAllStudents();
     }
+
 }
