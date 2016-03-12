@@ -57,6 +57,14 @@ public class Student extends Document {
         return getId();
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     public void updateFrom(Student in) {
         this.firstName = in.firstName;
         this.lastName = in.lastName;
