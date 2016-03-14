@@ -15,7 +15,7 @@ public class DateTimeUtil {
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS z";
     public static final String DATE_ONLY_FORMAT = "yyyy-MM-dd";
 
-    public static Date createDate(int year, int month, int day) {
+    public static Date date(int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
         return calendar.getTime();

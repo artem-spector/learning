@@ -17,7 +17,8 @@ public class DigitWritingLesson extends Lesson {
     public DigitWritingLesson() {
     }
 
-    public DigitWritingLesson(int plannedNumTrials) {
+    public DigitWritingLesson(String studentId, String courseId, int plannedNumTrials) {
+        super(studentId, courseId);
         this.plannedNumTrials = plannedNumTrials;
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
  * @author artem on 3/9/16.
  */
 @Component
-public class StudentsDao {
+public class StudentDao {
 
     @Autowired
     private Database db;
@@ -26,7 +26,7 @@ public class StudentsDao {
     }
 
     public List<Student> getAllStudents() {
-        LookupViewResponse<Student> response = StudentsDesignHelper.getAllStudentsView(db).lookup(null, null);
+        LookupViewResponse<Student> response = StudentDesignHelper.getAllStudentsView(db).lookup(null, null);
         ViewRow<Student>[] rows = response.getRows();
 
         List<Student> res = new ArrayList<>(rows.length);

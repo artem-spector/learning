@@ -1,8 +1,8 @@
 package com.artem.courses.digits;
 
 import com.artem.learning.server.model.Course;
-import com.artem.learning.server.model.CourseHistory;
 import com.artem.learning.server.model.Lesson;
+import com.artem.learning.server.model.Student;
 
 /**
  * TODO: Document!
@@ -22,7 +22,7 @@ public class DigitsWriting implements Course {
     }
 
     @Override
-    public Lesson prepareNewLesson(CourseHistory history) {
-        return new DigitWritingLesson(10);
+    public Lesson prepareNewLesson(Student student) {
+        return new DigitWritingLesson(student.getStudentId(), getId(), 10);
     }
 }

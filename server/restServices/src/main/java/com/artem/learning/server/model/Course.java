@@ -12,5 +12,5 @@ public interface Course {
 
     String getDisplayName();
 
-    Lesson prepareNewLesson(CourseHistory history);
+    Lesson prepareNewLesson(Student student);
 }

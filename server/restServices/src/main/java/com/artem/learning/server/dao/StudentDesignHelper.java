@@ -5,14 +5,13 @@ import com.artem.learning.server.couchdb.DesignDocument;
 import com.artem.learning.server.couchdb.View;
 import com.artem.learning.server.couchdb.ViewDefinition;
 import com.artem.learning.server.model.Student;
-import org.springframework.stereotype.Component;
 
 /**
  * TODO: Document!
  *
  * @author artem on 3/9/16.
  */
-public class StudentsDesignHelper {
+public class StudentDesignHelper {
 
     private static final String DESIGN_DOC_NAME = "students";
     private static final String ALL_STUDENTS_VIEW = "all_students";

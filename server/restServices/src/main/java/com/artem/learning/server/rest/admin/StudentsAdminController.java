@@ -1,7 +1,7 @@
 package com.artem.learning.server.rest.admin;
 
 import com.artem.learning.server.couchdb.UpdateDocumentResponse;
-import com.artem.learning.server.dao.StudentsDao;
+import com.artem.learning.server.dao.StudentDao;
 import com.artem.learning.server.model.DateTimeUtil;
 import com.artem.learning.server.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class StudentsAdminController {
     public static final String ADMIN_STUDENTS_PATH = "/admin/students";
 
     @Autowired
-    private StudentsDao dao;
+    private StudentDao dao;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody

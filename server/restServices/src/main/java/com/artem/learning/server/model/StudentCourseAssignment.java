@@ -2,16 +2,14 @@ package com.artem.learning.server.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * TODO: Document!
  *
  * @author artem on 3/5/16.
  */
-public class CourseHistory {
+public class StudentCourseAssignment {
 
     @JsonProperty("created")
     private Date createdAt;
@@ -19,16 +17,12 @@ public class CourseHistory {
     @JsonProperty("course_id")
     private String courseId;
 
-    @JsonProperty("lessons")
-    private List<Lesson> lessons;
-
-    public CourseHistory() {
+    public StudentCourseAssignment() {
     }
 
-    public CourseHistory(String courseId) {
+    public StudentCourseAssignment(String courseId) {
         createdAt = new Date();
         this.courseId = courseId;
-        lessons = new ArrayList<>();
     }
 
     public Date getCreatedAt() {
@@ -39,15 +33,4 @@ public class CourseHistory {
         return courseId;
     }
 
-    public int getNumLessons() {
-        return lessons.size();
-    }
-
-    public void addLesson(Lesson lesson) {
-        lessons.add(lesson);
-    }
-
-    public Lesson getLesson(int i) {
-        return lessons.get(i);
-    }
 }

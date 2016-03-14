@@ -1,6 +1,6 @@
 package com.artem.learning.server.rest.app;
 
-import com.artem.learning.server.dao.StudentsDao;
+import com.artem.learning.server.dao.StudentDao;
 import com.artem.learning.server.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +24,11 @@ public class AppController {
     public static final String APP_STUDENTS_PATH = APP_BASE_PATH + STUDENTS_PATH;
 
     @Autowired
-    private StudentsDao studentsDao;
+    private StudentDao studentDao;
 
     @RequestMapping(path = STUDENTS_PATH, method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<Student> getStudents() {
-        return studentsDao.getAllStudents();
+        return studentDao.getAllStudents();
     }
 }

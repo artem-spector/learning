@@ -1,0 +1,36 @@
+package com.artem.learning.server.dao;
+
+import com.artem.learning.server.couchdb.Database;
+import com.artem.learning.server.couchdb.LookupViewResponse;
+import com.artem.learning.server.couchdb.ViewRow;
+import com.artem.learning.server.model.Lesson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * TODO: Document!
+ *
+ * @author artem on 3/14/16.
+ */
+@Component
+public class LessonDao {
+
+    @Autowired
+    private Database db;
+
+    public List<Lesson> getLessons(String studentId, String courseId) {
+        List<Lesson> res = new ArrayList<>();
+        LookupViewResponse<Lesson> response = LessonDesignHelper.getLessonsByStudentAndCourseView(db).lookup(null, null);
+        for (ViewRow<Lesson> row : response.getRows()) {
+            res.add(row.getValue());
+        }
+        return res;
+    }
+
+    public void addLesson(Lesson lesson) {
+        db.addDocument(lesson);
+    }
+}

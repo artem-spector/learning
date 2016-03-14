@@ -22,9 +22,6 @@ public class Student extends Document {
     public enum Gender {male, female}
 
     @JsonProperty
-    private String docType;
-
-    @JsonProperty
     private String firstName;
 
     @JsonProperty
@@ -38,13 +35,12 @@ public class Student extends Document {
     private Gender gender;
 
     @JsonProperty
-    private Map<String, CourseHistory> courses;
+    private Map<String, StudentCourseAssignment> courses;
 
     public Student() {
     }
 
     public Student(String firstName, String lastName, Date birthDate, Gender gender) {
-        docType = "student";
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
@@ -77,7 +73,7 @@ public class Student extends Document {
         // go over new assignments and add them manually
         in.courses.keySet().removeAll(courses.keySet());
         for (String courseId : in.courses.keySet()) {
-            this.courses.put(courseId, new CourseHistory(courseId));
+            this.courses.put(courseId, new StudentCourseAssignment(courseId));
         }
     }
 
@@ -95,15 +91,15 @@ public class Student extends Document {
         return age;
     }
 
-    public CourseHistory getCourseHistory(String courseId) {
+    public StudentCourseAssignment getCourseAssignment(String courseId) {
         return courses == null ? null : courses.get(courseId);
     }
 
-    public void activateCourse(String courseId) {
-        CourseHistory history = getCourseHistory(courseId);
+    public void assignCourse(String courseId) {
+        StudentCourseAssignment history = getCourseAssignment(courseId);
         if (history == null) {
             if (courses == null) courses = new HashMap<>();
-            history = new CourseHistory(courseId);
+            history = new StudentCourseAssignment(courseId);
             courses.put(courseId, history);
         }
     }

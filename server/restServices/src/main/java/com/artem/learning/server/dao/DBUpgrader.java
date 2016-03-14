@@ -34,7 +34,8 @@ public class DBUpgrader implements InitializingBean{
                 if (db.getDatabaseInfo() == null) {
                     db.createDB();
                 }
-                db.updateDocument(StudentsDesignHelper.getDesignDocument());
+                db.updateDocument(StudentDesignHelper.getDesignDocument());
+                db.updateDocument(LessonDesignHelper.getDesignDocument());
                 break;
             default:
                 throw new Exception("Unsupported DB upgrade mode: '" + mode + "'");
