@@ -36,6 +36,9 @@ public abstract class Lesson extends Document {
     @JsonProperty("trials")
     private List<Trial> trials;
 
+    @JsonProperty("curr_trial")
+    private Trial currentTrial;
+
     public Lesson() {
         super("Lesson");
     }
@@ -73,14 +76,26 @@ public abstract class Lesson extends Document {
     }
 
     @JsonIgnore
-    public Trial getNextTrial() {
-        Trial res = generateTrial();
-        trials.add(res);
-        return res;
+    public Object getNextTask() {
+        if (currentTrial == null) {
+            currentTrial = generateTrial();
+        }
+        return currentTrial.getTask();
+    }
+
+    public Object submitTrialResponse(Object trialResponse) {
+        assert currentTrial != null && trialResponse != null;
+        Object feedback = currentTrial.submitResponse(trialResponse);
+        trials.add(currentTrial);
+        currentTrial = null;
+        return feedback;
     }
 
     @JsonIgnore
     public abstract boolean hasNextTrial();
 
     public abstract Trial generateTrial();
+
+    @JsonIgnore
+    public abstract Object getLessonFeedback();
 }

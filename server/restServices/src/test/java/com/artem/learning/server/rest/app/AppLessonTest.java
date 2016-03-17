@@ -50,6 +50,7 @@ public class AppLessonTest {
         appClient.chooseStudent("Bill", "Gates");
         appClient.chooseCourse(new DigitsWriting().getDisplayName());
         appClient.beginLesson();
+        appClient.submitLessonRequest(null);
     }
 
     private void adminCreateStudentAndAssignCourse() throws Exception {

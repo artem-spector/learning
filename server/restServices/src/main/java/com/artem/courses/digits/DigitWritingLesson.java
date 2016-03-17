@@ -34,4 +34,10 @@ public class DigitWritingLesson extends Lesson {
     public Trial generateTrial() {
         return new DigitWritingTrial();
     }
+
+    @Override
+    public Object getLessonFeedback() {
+        assert !hasNextTrial();
+        return "Good job! Come back soon.";
+    }
 }

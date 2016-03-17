@@ -79,9 +79,9 @@ public class LessonsTest {
         Lesson lesson = student1Lessons.get(0);
         assertEquals(0, lesson.getNumTrials());
         while (lesson.hasNextTrial()) {
-            Trial trial = lesson.getNextTrial();
-            Object response = generateResponse(trial.getStimulus());
-            trial.setResponse(response);
+            Object task = lesson.getNextTask();
+            Object response = generateResponse(task);
+            lesson.submitTrialResponse(response);
         }
         UpdateDocumentResponse updateRes = lessonDao.updateLesson(lesson);
         assertTrue(updateRes.isSuccess());
@@ -97,7 +97,7 @@ public class LessonsTest {
         return studentDao.getStudent(student.getId());
     }
 
-    private Object generateResponse(Object stimulus) {
+    private Object generateResponse(Object task) {
         DrawingRawData drawing = new DrawingRawData();
         drawing.add(new MotionData[] {
                 new MotionData(System.currentTimeMillis(), 0, 0, MotionData.MotionType.Down),

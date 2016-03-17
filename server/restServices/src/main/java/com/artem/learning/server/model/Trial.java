@@ -27,12 +27,12 @@ public abstract class Trial {
         creationTime = new Date();
     }
 
-    public void submitResponse(Object response) {
+    public Object submitResponse(Object response) {
         responseTime = new Date();
-        setResponse(response);
+        return setResponseAndGetFeedback(response);
     }
 
-    public abstract Object getStimulus();
-    public abstract Object getHelp();
-    protected abstract void setResponse(Object response);
+    public abstract Object getTask();
+
+    protected abstract Object setResponseAndGetFeedback(Object response);
 }

@@ -42,4 +42,8 @@ public class LessonDao {
     public UpdateDocumentResponse updateLesson(Lesson lesson) {
         return db.updateDocument(lesson);
     }
+
+    public Lesson getLesson(String lessonId) {
+        return db.getDocument(lessonId, Lesson.class);
+    }
 }

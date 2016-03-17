@@ -9,9 +9,11 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -70,6 +72,19 @@ public class AppClient {
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
         lessonId = res.getResponse().getHeader("Location");
+    }
+
+    public void submitLessonRequest(Object trialResponse) throws Exception {
+        String path = AppController.APP_LESSON_PATH + "/" + lessonId;
+        MockHttpServletRequestBuilder post = post(path);
+        if (trialResponse != null)
+            post.param("trialResponse", mapper.writeValueAsString(trialResponse));
+
+        MvcResult res = mvc.perform(post)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        Map value = mapper.readValue(res.getResponse().getContentAsString(), Map.class);
     }
 
     private List<Student> getStudents() throws Exception {
