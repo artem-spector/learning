@@ -6,10 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * TODO: Document!
@@ -111,5 +108,16 @@ public class Student extends Document {
         } catch (JsonProcessingException e) {
             return e.toString();
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || !(obj instanceof Student)) return false;
+        Student that = (Student) obj;
+
+        Object[] thisState = {getId(), getStudentId(), firstName, lastName, birthDate, gender, courses};
+        Object[] thatState = {that.getId(), that.getStudentId(), that.firstName, that.lastName, that.birthDate, that.gender, that.courses};
+        return Arrays.equals(thisState, thatState);
     }
 }
