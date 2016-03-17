@@ -49,7 +49,7 @@ public class AdminClient {
     }
 
     public void updateStudent(Map<String, Object> student) throws Exception {
-        mvc.perform(put(StudentsAdminController.ADMIN_STUDENTS_PATH + "/" + student.get("studentId"))
+        mvc.perform(put(StudentsAdminController.ADMIN_STUDENTS_PATH + "/" + student.get("_id"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(student)))
                 .andDo(print())
@@ -57,7 +57,7 @@ public class AdminClient {
     }
 
     public void deleteStudent(Map<String, Object> student) throws Exception {
-        mvc.perform(delete(StudentsAdminController.ADMIN_STUDENTS_PATH + "/" + student.get("studentId")))
+        mvc.perform(delete(StudentsAdminController.ADMIN_STUDENTS_PATH + "/" + student.get("_id")))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

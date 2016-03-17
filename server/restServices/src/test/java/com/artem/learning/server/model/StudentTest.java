@@ -3,7 +3,6 @@ package com.artem.learning.server.model;
 import com.artem.learning.server.ServerApp;
 import com.artem.learning.server.couchdb.UpdateDocumentResponse;
 import com.artem.learning.server.dao.StudentDao;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +13,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Calendar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * TODO: Document!
@@ -37,7 +37,7 @@ public class StudentTest {
         UpdateDocumentResponse res = dao.createStudent("Ayn", "Rand", DateTimeUtil.date(1905, Calendar.FEBRUARY, 2), Student.Gender.female);
         assertTrue(res.isSuccess());
         Student student = dao.getStudent(res.getId());
-        assertEquals(res.getId(), student.getStudentId());
+        assertEquals(res.getId(), student.getId());
 
         // serialize/deserialize
         String str = mapper.writeValueAsString(student);

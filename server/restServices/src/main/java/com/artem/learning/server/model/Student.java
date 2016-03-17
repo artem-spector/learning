@@ -2,6 +2,7 @@ package com.artem.learning.server.model;
 
 import com.artem.learning.server.couchdb.Document;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,19 +36,16 @@ public class Student extends Document {
     private Map<String, StudentCourseAssignment> courses;
 
     public Student() {
+        super("Student");
     }
 
     public Student(String firstName, String lastName, Date birthDate, Gender gender) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.gender = gender;
         this.courses = new HashMap<>();
-    }
-
-    @JsonProperty
-    public String getStudentId() {
-        return getId();
     }
 
     public String getFirstName() {
@@ -74,6 +72,7 @@ public class Student extends Document {
         }
     }
 
+    @JsonIgnore
     public int getAge() {
         Calendar dob = Calendar.getInstance();
         dob.setTime(birthDate);
@@ -116,8 +115,8 @@ public class Student extends Document {
         if (obj == null || !(obj instanceof Student)) return false;
         Student that = (Student) obj;
 
-        Object[] thisState = {getId(), getStudentId(), firstName, lastName, birthDate, gender, courses};
-        Object[] thatState = {that.getId(), that.getStudentId(), that.firstName, that.lastName, that.birthDate, that.gender, that.courses};
+        Object[] thisState = {getId(),firstName, lastName, birthDate, gender, courses};
+        Object[] thatState = {that.getId(), that.firstName, that.lastName, that.birthDate, that.gender, that.courses};
         return Arrays.equals(thisState, thatState);
     }
 }

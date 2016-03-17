@@ -93,7 +93,7 @@ public class LessonsTest {
     }
 
     private Student saveAndRetrieveStudent(Student student) {
-        studentDao.updateStudent(student, student.getStudentId());
+        studentDao.updateStudent(student);
         return studentDao.getStudent(student.getId());
     }
 
@@ -113,6 +113,6 @@ public class LessonsTest {
         assertNotNull(assignment);
         assertNotNull(assignment.getCreatedAt());
         assertEquals(course.getId(), assignment.getCourseId());
-        return lessonDao.getLessons(student.getStudentId(), course.getId());
+        return lessonDao.getLessons(student.getId(), course.getId());
     }
 }

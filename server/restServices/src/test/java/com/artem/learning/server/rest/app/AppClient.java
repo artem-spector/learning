@@ -59,7 +59,7 @@ public class AppClient {
     }
 
     public void beginLesson() throws Exception {
-        String studentCoursePath = AppController.APP_STUDENTS_PATH + "/" + student.getStudentId() + "/courses/" + course.getId();
+        String studentCoursePath = AppController.APP_STUDENTS_PATH + "/" + student.getId() + "/courses/" + course.getId();
         MvcResult res = mvc.perform(post(studentCoursePath).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
@@ -76,7 +76,7 @@ public class AppClient {
     }
 
     private List<Course> getCourses() throws Exception {
-        String studentCourses = AppController.APP_STUDENTS_PATH + "/" + student.getStudentId() + "/courses";
+        String studentCourses = AppController.APP_STUDENTS_PATH + "/" + student.getId() + "/courses";
         MvcResult res = mvc.perform(get(studentCourses).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

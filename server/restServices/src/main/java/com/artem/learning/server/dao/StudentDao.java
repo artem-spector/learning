@@ -40,11 +40,8 @@ public class StudentDao {
         return db.getDocument(studentId, Student.class);
     }
 
-    public UpdateDocumentResponse updateStudent(Student inStudent, String id) {
-        assert id != null;
-        Student student = db.getDocument(id, Student.class);
-        student.updateFrom(inStudent);
-        return db.updateDocument(student);
+    public UpdateDocumentResponse updateStudent(Student inStudent) {
+        return db.updateDocument(inStudent);
     }
 
     public UpdateDocumentResponse deleteStudent(String studentId) {

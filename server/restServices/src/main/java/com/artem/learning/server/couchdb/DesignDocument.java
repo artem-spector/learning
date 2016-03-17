@@ -19,7 +19,7 @@ public class DesignDocument extends Document {
     private Map<String, Map<String, String>> views;
 
     public DesignDocument(String docName, String language, ViewDefinition... viewDefinitions) {
-        super("_design/" + docName);
+        super(null, "_design/" + docName);
         this.language = language;
         views = new HashMap<>();
         if (viewDefinitions != null) {

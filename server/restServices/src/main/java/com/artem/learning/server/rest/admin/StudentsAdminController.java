@@ -42,7 +42,8 @@ public class StudentsAdminController {
     @RequestMapping(path = "/{studentId}", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<String> updateStudent(@RequestBody Student inStudent, @PathVariable String studentId) {
-        UpdateDocumentResponse response = dao.updateStudent(inStudent, studentId);
+        assert inStudent.getId().equals(studentId);
+        UpdateDocumentResponse response = dao.updateStudent(inStudent);
         if (response.isSuccess())
             return ResponseEntity.ok("ok");
         else

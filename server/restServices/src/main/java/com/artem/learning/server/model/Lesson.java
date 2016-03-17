@@ -37,9 +37,11 @@ public abstract class Lesson extends Document {
     private List<Trial> trials;
 
     public Lesson() {
+        super("Lesson");
     }
 
     public Lesson(String studentId, String courseId) {
+        this();
         this.studentId = studentId;
         this.courseId = courseId;
         startTime = new Date();

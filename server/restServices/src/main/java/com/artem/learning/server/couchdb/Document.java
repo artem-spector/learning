@@ -1,6 +1,7 @@
 package com.artem.learning.server.couchdb;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -8,14 +9,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author artem on 3/5/16.
  */
-@JsonIgnoreProperties(value = {"_id", "_rev"}, allowSetters = true)
 public abstract class Document {
 
-    @JsonProperty(value = "_id")
+    @JsonProperty("_id")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String id;
 
-    @JsonProperty(value = "_rev")
+    @JsonProperty("_rev")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String revision;
+
+    @JsonProperty("doc_type")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String documentType;
 
     public String getId() {
         return id;
@@ -25,10 +31,14 @@ public abstract class Document {
         return revision;
     }
 
-    protected Document() {
+    @JsonCreator
+    protected Document(@JsonProperty("doc_type") String documentType) {
+        this.documentType = documentType;
     }
 
-    protected Document(String id) {
+    @JsonCreator
+    protected Document(@JsonProperty("doc_type") String documentType, @JsonProperty("_id") String id) {
+        this.documentType = documentType;
         this.id = id;
     }
 

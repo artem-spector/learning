@@ -18,9 +18,11 @@ public class User extends Document {
     private String displayName;
 
     public User() {
+        super("User");
     }
 
     public User(String loginId, String displayName) {
+        this();
         this.loginId = loginId;
         this.displayName = displayName;
     }

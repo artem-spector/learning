@@ -3,8 +3,6 @@ package com.artem.learning.server.rest.app;
 import com.artem.courses.digits.DigitsWriting;
 import com.artem.learning.server.ServerApp;
 import com.artem.learning.server.couchdb.Database;
-import com.artem.learning.server.model.Course;
-import com.artem.learning.server.model.Student;
 import com.artem.learning.server.rest.admin.AdminClient;
 import org.junit.Before;
 import org.junit.Test;

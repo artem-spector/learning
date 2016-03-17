@@ -23,6 +23,6 @@ public class DigitsWriting implements Course {
 
     @Override
     public Lesson prepareNewLesson(Student student) {
-        return new DigitWritingLesson(student.getStudentId(), getId(), 10);
+        return new DigitWritingLesson(student.getId(), getId(), 10);
     }
 }

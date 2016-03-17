@@ -2,7 +2,6 @@ package com.artem.learning.server.rest.admin;
 
 import com.artem.learning.server.ServerApp;
 import com.artem.learning.server.couchdb.Database;
-import com.artem.learning.server.model.DateTimeUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +54,7 @@ public class StudentsAdminTest {
         allStudents = adminClient.getAllStudents();
         assertEquals(1, allStudents.size() - numStudents);
         Map<String, Object> student = allStudents.get(allStudents.size() - 1);
-        String studentId = (String) student.get("studentId");
+        String studentId = (String) student.get("_id");
         Map<String, Object> courses = (Map<String, Object>) student.get("courses");
         assertEquals(0, courses.size());
 

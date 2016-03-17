@@ -1,5 +1,5 @@
 function(doc) {
-    if (doc.studentId !== undefined) {
-        emit(doc.studentId, doc)
+    if (doc.doc_type == "Student") {
+        emit(doc._id, doc)
     }
 }
