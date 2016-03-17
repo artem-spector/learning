@@ -2,6 +2,7 @@ package com.artem.learning.server.rest.app;
 
 import com.artem.learning.server.model.Course;
 import com.artem.learning.server.model.Student;
+import com.artem.learning.server.model.StudentCourseAssignment;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -31,7 +32,7 @@ public class AppClient {
     private TypeFactory typeFactory = TypeFactory.defaultInstance();
 
     private Student student;
-    private Course course;
+    private String courseId;
     private String lessonId;
 
     public AppClient(MockMvc mvc) {
@@ -50,16 +51,17 @@ public class AppClient {
     }
 
     public void chooseCourse(String courseDisplayName) throws Exception {
-        for (Course course : getCourses()) {
-            if (course.getDisplayName().equals(courseDisplayName)) {
-                this.course = course;
+        for (StudentCourseAssignment assignment : student.getCourseAssignments().values()) {
+            if (assignment.getCourseDisplayName().equals(courseDisplayName)) {
+                courseId = assignment.getCourseId();
+                return;
             }
         }
         fail("Course not found");
     }
 
     public void beginLesson() throws Exception {
-        String studentCoursePath = AppController.APP_STUDENTS_PATH + "/" + student.getId() + "/courses/" + course.getId();
+        String studentCoursePath = AppController.APP_STUDENTS_PATH + "/" + student.getId() + "/courses/" + courseId;
         MvcResult res = mvc.perform(post(studentCoursePath).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())

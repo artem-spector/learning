@@ -2,13 +2,16 @@ package com.artem.learning.server.rest.admin;
 
 import com.artem.learning.server.couchdb.UpdateDocumentResponse;
 import com.artem.learning.server.dao.StudentDao;
+import com.artem.learning.server.model.CourseRepository;
 import com.artem.learning.server.model.DateTimeUtil;
 import com.artem.learning.server.model.Student;
+import com.artem.learning.server.model.StudentCourseAssignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO: Document!
@@ -24,6 +27,9 @@ public class StudentsAdminController {
 
     @Autowired
     private StudentDao dao;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -43,6 +49,16 @@ public class StudentsAdminController {
     @ResponseBody
     public ResponseEntity<String> updateStudent(@RequestBody Student inStudent, @PathVariable String studentId) {
         assert inStudent.getId().equals(studentId);
+
+        // if the courses were assigned on the client side the assignment data may be incomplete
+        for (Map.Entry<String, StudentCourseAssignment> entry : inStudent.getCourseAssignments().entrySet()) {
+            String courseId = entry.getKey();
+            StudentCourseAssignment assignment = entry.getValue();
+            if (!assignment.isComplete()) {
+                assignment.setCourse(courseRepository.getCourse(courseId));
+            }
+        }
+
         UpdateDocumentResponse response = dao.updateStudent(inStudent);
         if (response.isSuccess())
             return ResponseEntity.ok("ok");

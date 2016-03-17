@@ -56,22 +56,6 @@ public class Student extends Document {
         return lastName;
     }
 
-    public void updateFrom(Student in) {
-        this.firstName = in.firstName;
-        this.lastName = in.lastName;
-        this.birthDate = in.birthDate;
-        this.gender = in.gender;
-
-        // retain only the courses which were not removed
-        this.courses.keySet().retainAll(in.courses.keySet());
-
-        // go over new assignments and add them manually
-        in.courses.keySet().removeAll(courses.keySet());
-        for (String courseId : in.courses.keySet()) {
-            this.courses.put(courseId, new StudentCourseAssignment(courseId));
-        }
-    }
-
     @JsonIgnore
     public int getAge() {
         Calendar dob = Calendar.getInstance();
@@ -87,16 +71,23 @@ public class Student extends Document {
         return age;
     }
 
+    @JsonIgnore
+    public Map<String, StudentCourseAssignment> getCourseAssignments() {
+        return courses;
+    }
+
     public StudentCourseAssignment getCourseAssignment(String courseId) {
         return courses == null ? null : courses.get(courseId);
     }
 
-    public void assignCourse(String courseId) {
-        StudentCourseAssignment history = getCourseAssignment(courseId);
-        if (history == null) {
+    public void assignCourse(Course course) {
+        String courseId = course.getId();
+        StudentCourseAssignment assignment = getCourseAssignment(courseId);
+        if (assignment == null) {
             if (courses == null) courses = new HashMap<>();
-            history = new StudentCourseAssignment(courseId);
-            courses.put(courseId, history);
+            assignment = new StudentCourseAssignment();
+            assignment.setCourse(course);
+            courses.put(courseId, assignment);
         }
     }
 

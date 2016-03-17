@@ -82,7 +82,6 @@ public class AdminClient {
         String courseId = (String) course.get("id");
         courses.put(courseId, assignment);
         assignment.put("id", courseId);
-        assignment.put("name", course.get("name"));
     }
 
     private List<Map<String, Object>> unmarshalListOfMaps(MvcResult result) throws java.io.IOException {

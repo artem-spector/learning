@@ -60,12 +60,12 @@ public class LessonsTest {
         assertNull(student2.getCourseAssignment(course.getId()));
 
         // assign the course; still no lessons
-        student1.assignCourse(course.getId());
+        student1.assignCourse(course);
         student1 = saveAndRetrieveStudent(student1);
         assertNotNull(student1.getCourseAssignment(course.getId()));
         assertEquals(0, getStudentLessons(student1, course).size());
 
-        student2.assignCourse(course.getId());
+        student2.assignCourse(course);
         student2 = saveAndRetrieveStudent(student2);
         assertNotNull(student1.getCourseAssignment(course.getId()));
         assertEquals(0, getStudentLessons(student2, course).size());

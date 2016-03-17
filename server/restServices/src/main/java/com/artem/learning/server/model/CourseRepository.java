@@ -19,4 +19,9 @@ public class CourseRepository {
         courses.add(new DigitsWriting());
         return courses;
     }
+
+    public Course getCourse(String id) {
+        DigitsWriting res = new DigitsWriting();
+        return id.equals(res.getId()) ? res : null;
+    }
 }
