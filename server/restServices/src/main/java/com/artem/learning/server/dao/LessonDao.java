@@ -2,6 +2,7 @@ package com.artem.learning.server.dao;
 
 import com.artem.learning.server.couchdb.Database;
 import com.artem.learning.server.couchdb.LookupViewResponse;
+import com.artem.learning.server.couchdb.UpdateDocumentResponse;
 import com.artem.learning.server.couchdb.ViewRow;
 import com.artem.learning.server.model.DateTimeUtil;
 import com.artem.learning.server.model.Lesson;
@@ -36,5 +37,9 @@ public class LessonDao {
 
     public void addLesson(Lesson lesson) {
         db.addDocument(lesson);
+    }
+
+    public UpdateDocumentResponse updateLesson(Lesson lesson) {
+        return db.updateDocument(lesson);
     }
 }

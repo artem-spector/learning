@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -61,39 +62,34 @@ public class LessonsTest {
         // assign the course; still no lessons
         student1.assignCourse(course.getId());
         student1 = saveAndRetrieveStudent(student1);
+        assertNotNull(student1.getCourseAssignment(course.getId()));
         assertEquals(0, getStudentLessons(student1, course).size());
 
         student2.assignCourse(course.getId());
         student2 = saveAndRetrieveStudent(student2);
+        assertNotNull(student1.getCourseAssignment(course.getId()));
         assertEquals(0, getStudentLessons(student2, course).size());
 
         // Do the first lesson
         lessonDao.addLesson(course.prepareNewLesson(student1));
-        assertEquals(1, getStudentLessons(student1, course).size());
+        List<Lesson> student1Lessons = getStudentLessons(student1, course);
+        assertEquals(1, student1Lessons.size());
         assertEquals(0, getStudentLessons(student2, course).size());
 
-
-/*
-        courseAssignment.addLesson(lesson);
-        saveAndRetrieveStudent();
-
-        courseAssignment = student.getCourse(course.getId());
-        lesson = courseAssignment.getLesson(courseAssignment.getNumLessons() - 1);
+        Lesson lesson = student1Lessons.get(0);
+        assertEquals(0, lesson.getNumTrials());
         while (lesson.hasNextTrial()) {
             Trial trial = lesson.getNextTrial();
             Object response = generateResponse(trial.getStimulus());
             trial.setResponse(response);
         }
-        saveAndRetrieveStudent();
-
-        // make sure the courseAssignment is stored
-        courseAssignment = student.getCourse(course.getId());
-        assertEquals(1, courseAssignment.getNumLessons());
-        lesson = courseAssignment.getLesson(0);
-        assertNotNull(lesson.getStartTime());
-        assertNotNull(lesson.getEndTime());
+        UpdateDocumentResponse updateRes = lessonDao.updateLesson(lesson);
+        assertTrue(updateRes.isSuccess());
+        lesson = getStudentLessons(student1, course).get(0);
         assertTrue(lesson.getNumTrials() > 0);
-*/
+        Date endTime = lesson.getEndTime();
+        assertNotNull(endTime);
+        assertTrue(endTime.getTime() > lesson.getStartTime().getTime());
     }
 
     private Student saveAndRetrieveStudent(Student student) {
