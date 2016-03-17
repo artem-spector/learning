@@ -48,11 +48,6 @@ public abstract class Lesson extends Document {
         trials = new ArrayList<>();
     }
 
-    @JsonProperty
-    public String getLessonId() {
-        return getId();
-    }
-
     public String getStudentId() {
         return studentId;
     }

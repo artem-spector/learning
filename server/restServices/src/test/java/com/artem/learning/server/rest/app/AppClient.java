@@ -61,10 +61,13 @@ public class AppClient {
     }
 
     public void beginLesson() throws Exception {
-        String studentCoursePath = AppController.APP_STUDENTS_PATH + "/" + student.getId() + "/courses/" + courseId;
-        MvcResult res = mvc.perform(post(studentCoursePath).accept(MediaType.APPLICATION_JSON))
+        String studentCoursePath = AppController.APP_STUDENTS_PATH + "/" + student.getId();
+        MvcResult res = mvc.perform(post(studentCoursePath)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .accept(MediaType.APPLICATION_JSON)
+                .param("courseId", courseId))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection())
+                .andExpect(status().is2xxSuccessful())
                 .andReturn();
         lessonId = res.getResponse().getHeader("Location");
     }
