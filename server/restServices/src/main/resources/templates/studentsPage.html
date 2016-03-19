@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Students</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="/students.js"/>
+</head>
+<body>
+<p th:text="'Hello, ' + ${name} + '!'"></p>
+
+<div id="studentList">
+    <div th:each = "student : ${students}">
+        <span th:text="${student.firstName}">First name</span>
+        <span th:text="${student.lastName}">Last name</span>
+        <span th:text="${student.age}">Age</span>
+        <span th:text="${student.gender}">Gender</span>
+        <button form="dummyForm" type="submit" formmethod="post" th:formaction="'/console/deleteStudent/' + ${student.id}">Delete</button>
+    </div>
+</div>
+
+<div id="controls">
+    <form action="/console/students" method="post">
+        <fieldset>
+            First name: <input type="text" name="firstName" /><br/>
+            Last name: <input type="text" name="lastName" /><br/>
+            <input type="radio" name="gender" value="male" checked="checked"/> Male <input type="radio" name="gender" value="female"/> Female<br/>
+            Birth date: <input type="date" name="birthDate" />
+            <br/>
+            <input type="submit" value="Create"/>
+        </fieldset>
+    </form>
+</div>
+
+<div id="invisibleDiv" hidden = "hidden">
+    <form id="dummyForm"></form>
+</div>
+</body>
+</html>

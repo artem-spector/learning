@@ -71,6 +71,10 @@ public class Student extends Document {
         return age;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+
     @JsonIgnore
     public Map<String, StudentCourseAssignment> getCourseAssignments() {
         return courses;
