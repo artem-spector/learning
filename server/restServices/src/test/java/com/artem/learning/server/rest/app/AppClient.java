@@ -1,6 +1,5 @@
 package com.artem.learning.server.rest.app;
 
-import com.artem.learning.server.model.Course;
 import com.artem.learning.server.model.Student;
 import com.artem.learning.server.model.StudentCourseAssignment;
 import com.fasterxml.jackson.databind.JavaType;
@@ -9,6 +8,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.io.IOException;
@@ -16,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.TestCase.fail;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -65,7 +66,7 @@ public class AppClient {
 
     public void beginLesson() throws Exception {
         String studentCoursePath = AppController.APP_STUDENTS_PATH + "/" + student.getId();
-        MvcResult res = mvc.perform(post(studentCoursePath)
+        MvcResult res = invokeAsyncRequest(post(studentCoursePath)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .param("courseId", courseId))
@@ -81,7 +82,7 @@ public class AppClient {
         if (trialResponse != null)
             post.param("trialResponse", mapper.writeValueAsString(trialResponse));
 
-        MvcResult res = mvc.perform(post)
+        MvcResult res = invokeAsyncRequest(post)
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -89,21 +90,16 @@ public class AppClient {
         this.nextTrial = value.get("nextTrial");
     }
 
+    public Object getNextTrial() {
+        return nextTrial;
+    }
+
     private List<Student> getStudents() throws Exception {
-        MvcResult res = mvc.perform(get(AppController.APP_STUDENTS_PATH).accept(MediaType.APPLICATION_JSON))
+        MvcResult res = invokeAsyncRequest(get(AppController.APP_STUDENTS_PATH).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
         return unmarshalList(res, Student.class);
-    }
-
-    private List<Course> getCourses() throws Exception {
-        String studentCourses = AppController.APP_STUDENTS_PATH + "/" + student.getId() + "/courses";
-        MvcResult res = mvc.perform(get(studentCourses).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-        return unmarshalList(res, Course.class);
     }
 
     private <T> List<T> unmarshalList(MvcResult res, Class<T> elementType) throws IOException {
@@ -111,7 +107,8 @@ public class AppClient {
         return mapper.readValue(res.getResponse().getContentAsString(), listType);
     }
 
-    public Object getNextTrial() {
-        return nextTrial;
+    private ResultActions invokeAsyncRequest(RequestBuilder request) throws Exception {
+        MvcResult result = mvc.perform(request).andExpect(request().asyncStarted()).andReturn();
+        return mvc.perform(asyncDispatch(result));
     }
 }

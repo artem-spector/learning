@@ -14,6 +14,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * TODO: Document!
@@ -42,39 +43,43 @@ public class AppController {
 
     @RequestMapping(path = STUDENTS_PATH, method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public List<Student> getStudents() {
-        return studentDao.getAllStudents();
+    public Callable<List<Student>> getStudents() {
+        return () -> studentDao.getAllStudents();
     }
 
     @RequestMapping(path = STUDENTS_PATH + "/{studentId}", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Void> beginLesson(@PathVariable String studentId, @RequestParam String courseId) {
-        Course course = courseRepository.getCourse(courseId);
-        Lesson lesson = course.prepareNewLesson(studentDao.getStudent(studentId));
-        lessonDao.addLesson(lesson);
-        return ResponseEntity.created(URI.create(lesson.getId())).build();
+    public Callable<ResponseEntity<Void>> beginLesson(@PathVariable String studentId, @RequestParam String courseId) {
+        return () -> {
+            Course course = courseRepository.getCourse(courseId);
+            Lesson lesson = course.prepareNewLesson(studentDao.getStudent(studentId));
+            lessonDao.addLesson(lesson);
+            return ResponseEntity.created(URI.create(lesson.getId())).build();
+        };
     }
 
     @RequestMapping(path = LESSON_PATH + "/{lessonId}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> processLessonRequest(@PathVariable String lessonId, @RequestParam(name = "trialResponse", required = false) String trialResponse) {
-        assert lessonId != null;
-        Lesson lesson = lessonDao.getLesson(lessonId);
-        assert lesson != null;
+    public Callable<ResponseEntity<Map<String, Object>>> processLessonRequest(@PathVariable String lessonId, @RequestParam(name = "trialResponse", required = false) String trialResponse) {
+        return () -> {
+            assert lessonId != null;
+            Lesson lesson = lessonDao.getLesson(lessonId);
+            assert lesson != null;
 
-        Map<String, Object> res = new HashMap<>();
+            Map<String, Object> res = new HashMap<>();
 
-        if (trialResponse != null) {
-            res.put("trialFeedback", lesson.submitTrialResponse(trialResponse));
-        }
+            if (trialResponse != null) {
+                res.put("trialFeedback", lesson.submitTrialResponse(trialResponse));
+            }
 
-        if (lesson.hasNextTrial()) {
-            res.put("nextTrial", lesson.getNextTask());
-        } else {
-            res.put("lessonFeedback", lesson.getLessonFeedback());
-        }
+            if (lesson.hasNextTrial()) {
+                res.put("nextTrial", lesson.getNextTask());
+            } else {
+                res.put("lessonFeedback", lesson.getLessonFeedback());
+            }
 
-        lessonDao.updateLesson(lesson);
-        return ResponseEntity.ok(res);
+            lessonDao.updateLesson(lesson);
+            return ResponseEntity.ok(res);
+        };
     }
 }
