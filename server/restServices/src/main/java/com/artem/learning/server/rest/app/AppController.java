@@ -57,7 +57,7 @@ public class AppController {
 
     @RequestMapping(path = LESSON_PATH + "/{lessonId}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> processLessonRequest(@PathVariable String lessonId, @RequestParam(required = false) Object trialResponse) {
+    public ResponseEntity<Map<String, Object>> processLessonRequest(@PathVariable String lessonId, @RequestParam(name = "trialResponse", required = false) String trialResponse) {
         assert lessonId != null;
         Lesson lesson = lessonDao.getLesson(lessonId);
         assert lesson != null;
@@ -74,6 +74,7 @@ public class AppController {
             res.put("lessonFeedback", lesson.getLessonFeedback());
         }
 
+        lessonDao.updateLesson(lesson);
         return ResponseEntity.ok(res);
     }
 }

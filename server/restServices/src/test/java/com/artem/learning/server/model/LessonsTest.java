@@ -7,6 +7,8 @@ import com.artem.learning.server.dao.LessonDao;
 import com.artem.learning.server.dao.StudentDao;
 import com.artem.server.api.drawing.DrawingRawData;
 import com.artem.server.api.drawing.MotionData;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +40,8 @@ public class LessonsTest {
     @Autowired
     private LessonDao lessonDao;
 
+    private ObjectMapper mapper = new ObjectMapper();
+
     private Student student1;
     private Student student2;
     private DigitsWriting course;
@@ -54,7 +58,7 @@ public class LessonsTest {
     }
 
     @Test
-    public void testStudentsAndLessons() {
+    public void testStudentsAndLessons() throws JsonProcessingException {
         // the course courseAssignment does not exist at the beginning
         assertNull(student1.getCourseAssignment(course.getId()));
         assertNull(student2.getCourseAssignment(course.getId()));
@@ -80,7 +84,7 @@ public class LessonsTest {
         assertEquals(0, lesson.getNumTrials());
         while (lesson.hasNextTrial()) {
             Object task = lesson.getNextTask();
-            Object response = generateResponse(task);
+            String response = generateResponse(task);
             lesson.submitTrialResponse(response);
         }
         UpdateDocumentResponse updateRes = lessonDao.updateLesson(lesson);
@@ -97,14 +101,14 @@ public class LessonsTest {
         return studentDao.getStudent(student.getId());
     }
 
-    private Object generateResponse(Object task) {
+    private String generateResponse(Object task) throws JsonProcessingException {
         DrawingRawData drawing = new DrawingRawData();
         drawing.add(new MotionData[] {
                 new MotionData(System.currentTimeMillis(), 0, 0, MotionData.MotionType.Down),
                 new MotionData(System.currentTimeMillis(), 0, 1, MotionData.MotionType.Move),
                 new MotionData(System.currentTimeMillis(), 0, 1, MotionData.MotionType.Up)
         });
-        return drawing;
+        return mapper.writeValueAsString(drawing);
     }
 
     private List<Lesson> getStudentLessons(Student student, Course course) {

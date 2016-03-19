@@ -4,6 +4,8 @@ import com.artem.learning.server.model.Lesson;
 import com.artem.learning.server.model.Trial;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Random;
+
 /**
  * TODO: Document!
  *
@@ -32,7 +34,8 @@ public class DigitWritingLesson extends Lesson {
 
     @Override
     public Trial generateTrial() {
-        return new DigitWritingTrial();
+        int digit = new Random(System.currentTimeMillis()).nextInt(10);
+        return new DigitWritingTrial(digit);
     }
 
     @Override

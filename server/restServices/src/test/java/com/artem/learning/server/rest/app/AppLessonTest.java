@@ -4,6 +4,8 @@ import com.artem.courses.digits.DigitsWriting;
 import com.artem.learning.server.ServerApp;
 import com.artem.learning.server.couchdb.Database;
 import com.artem.learning.server.rest.admin.AdminClient;
+import com.artem.server.api.drawing.DrawingRawData;
+import com.artem.server.api.drawing.MotionData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +53,20 @@ public class AppLessonTest {
         appClient.chooseCourse(new DigitsWriting().getDisplayName());
         appClient.beginLesson();
         appClient.submitLessonRequest(null);
+        while (appClient.getNextTrial() != null) {
+            appClient.submitLessonRequest(createDrawing());
+        }
+    }
+
+    private DrawingRawData createDrawing() {
+        DrawingRawData drawing = new DrawingRawData();
+        drawing.add(new MotionData[] {
+                new MotionData(System.currentTimeMillis(), 0, 0, MotionData.MotionType.Down),
+                new MotionData(System.currentTimeMillis(), 0, 1, MotionData.MotionType.Move),
+                new MotionData(System.currentTimeMillis(), 0, 1, MotionData.MotionType.Up)
+        });
+        return drawing;
+
     }
 
     private void adminCreateStudentAndAssignCourse() throws Exception {

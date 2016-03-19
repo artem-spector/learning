@@ -83,9 +83,9 @@ public abstract class Lesson extends Document {
         return currentTrial.getTask();
     }
 
-    public Object submitTrialResponse(Object trialResponse) {
-        assert currentTrial != null && trialResponse != null;
-        Object feedback = currentTrial.submitResponse(trialResponse);
+    public Object submitTrialResponse(String trialResponseStr) {
+        assert currentTrial != null && trialResponseStr != null;
+        Object feedback = currentTrial.submitResponse(trialResponseStr);
         trials.add(currentTrial);
         currentTrial = null;
         return feedback;

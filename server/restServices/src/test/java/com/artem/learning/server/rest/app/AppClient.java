@@ -36,6 +36,7 @@ public class AppClient {
     private Student student;
     private String courseId;
     private String lessonId;
+    private Object nextTrial;
 
     public AppClient(MockMvc mvc) {
         this.mvc = mvc;
@@ -85,6 +86,7 @@ public class AppClient {
                 .andExpect(status().isOk())
                 .andReturn();
         Map value = mapper.readValue(res.getResponse().getContentAsString(), Map.class);
+        this.nextTrial = value.get("nextTrial");
     }
 
     private List<Student> getStudents() throws Exception {
@@ -107,5 +109,9 @@ public class AppClient {
     private <T> List<T> unmarshalList(MvcResult res, Class<T> elementType) throws IOException {
         JavaType listType = typeFactory.constructCollectionType(List.class, elementType);
         return mapper.readValue(res.getResponse().getContentAsString(), listType);
+    }
+
+    public Object getNextTrial() {
+        return nextTrial;
     }
 }
