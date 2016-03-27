@@ -10,12 +10,16 @@
 <p th:text="'Hello, ' + ${name} + '!'"></p>
 
 <div id="studentList">
-    <div th:each = "student : ${students}">
-        <span th:text="${student.firstName}">First name</span>
+    <div th:each = "student : ${students}"
+         th:onclick="|details_${student.id}.hidden = !details_${student.id}.hidden|">
+        <span th:text="${student.firstName}" onclick="">First name</span>
         <span th:text="${student.lastName}">Last name</span>
         <span th:text="${student.age}">Age</span>
         <span th:text="${student.gender}">Gender</span>
         <button form="dummyForm" type="submit" formmethod="post" th:formaction="'/console/deleteStudent/' + ${student.id}">Delete</button>
+        <div th:id="'details_' + ${student.id}" hidden="true">
+            Assigned courses
+        </div>
     </div>
 </div>
 
