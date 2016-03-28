@@ -9,13 +9,14 @@
 <body>
 <p th:text="'Hello, ' + ${name} + '!'"></p>
 
-<div id="studentList">
+<div id="students">
     <h4>Students</h4>
-    <div th:each="student : ${students}">
+    <div id="studentList" th:each="student : ${students}">
         <div th:onclick="|details_${student.id}.hidden = !details_${student.id}.hidden|" style="background:lightgray">
             <span th:text="${student.firstName}">First name</span>
             <span th:text="${student.lastName}">Last name</span>
         </div>
+        <p/>
         <div th:id="'details_' + ${student.id}" hidden="true">
             Personal details
             <form th:action="'/console/students/' + ${student.id}" method="post">
@@ -37,9 +38,26 @@
                 </fieldset>
             </form>
 
-            Assigned courses
+            <div id="assignedCourses" th:each="assignedCourse: ${student.courseAssignments}">
+                Assigned courses
+                <div>
+                    <span th:text="${assignedCourse.value.courseDisplayName}">Course name</span>
+                </div>
+            </div>
+            <div id="availableCourses" th:each="course: ${availableCourses}">
+                Available courses:
+                <div>
+                    <form th:action="'/console/students/assign/' + ${student.id}" method="post">
+                        <fieldset>
+                            <span th:text="${course.displayName}">Course name</span>
+                            <input type="hidden" name="courseId" th:value="${course.id}"/>
+                            <input type="submit" value="Add"/>
+                        </fieldset>
+                    </form>
+                </div>
+                <div ></div>
+            </div>
         </div>
-        <p/>
     </div>
 
     <div id="newStudent">

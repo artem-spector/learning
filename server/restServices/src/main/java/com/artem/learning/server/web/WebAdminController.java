@@ -1,6 +1,8 @@
 package com.artem.learning.server.web;
 
 import com.artem.learning.server.dao.StudentDao;
+import com.artem.learning.server.model.Course;
+import com.artem.learning.server.model.CourseRepository;
 import com.artem.learning.server.model.DateTimeUtil;
 import com.artem.learning.server.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +27,14 @@ public class WebAdminController {
     @Autowired
     private StudentDao studentDao;
 
+    @Autowired
+    private CourseRepository courseRepository;
+
     @RequestMapping(path = "/students", method = RequestMethod.GET)
     public String getStudents(Model model) {
         model.addAttribute("name", "Artem");
         model.addAttribute("students", studentDao.getAllStudents());
+        model.addAttribute("availableCourses", courseRepository.getAvailableCourses());
         return "studentsPage";
     }
 
@@ -57,6 +63,15 @@ public class WebAdminController {
     @RequestMapping(path = "/deleteStudent/{studentId}", method = RequestMethod.POST)
     public String deleteStudent(@PathVariable String studentId, Model model) {
         studentDao.deleteStudent(studentId);
+        return getStudents(model);
+    }
+
+    @RequestMapping(path = "/students/assign/{id}", method = RequestMethod.POST)
+    public String addCourse(@PathVariable("id") String studentId, @RequestParam("courseId") String courseId, Model model) {
+        Student student = studentDao.getStudent(studentId);
+        Course course = courseRepository.getCourse(courseId);
+        student.assignCourse(course);
+        studentDao.updateStudent(student);
         return getStudents(model);
     }
 
