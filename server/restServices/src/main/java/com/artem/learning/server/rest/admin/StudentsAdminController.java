@@ -38,7 +38,7 @@ public class StudentsAdminController {
             @RequestParam String lastName,
             @RequestParam String birthDate,
             @RequestParam Student.Gender gender) {
-        UpdateDocumentResponse response = dao.createStudent(firstName, lastName, DateTimeUtil.parseDateOnly(birthDate), gender);
+        UpdateDocumentResponse response = dao.createStudent(firstName, lastName, DateTimeUtil.parseDateUTC(birthDate), gender);
         if (response.isSuccess())
             return ResponseEntity.ok("ok");
         else

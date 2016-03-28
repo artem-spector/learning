@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
+
 /**
  * TODO: Document!
  *
@@ -31,8 +33,24 @@ public class WebAdminController {
     }
 
     @RequestMapping(path = "/students", method = RequestMethod.POST)
-    public String createStudent(@RequestParam String firstName, @RequestParam String lastName, @RequestParam Student.Gender gender, @RequestParam String birthDate, Model model) {
-        studentDao.createStudent(firstName, lastName, DateTimeUtil.parseDateOnly(birthDate), gender);
+    public String createStudent(@RequestParam String firstName, @RequestParam String lastName,
+                                @RequestParam Student.Gender gender, @RequestParam String birthDate,
+                                Model model) {
+        studentDao.createStudent(firstName, lastName, parseDate(birthDate), gender);
+        return getStudents(model);
+    }
+
+    @RequestMapping(path = "/students/{id}", method = RequestMethod.POST)
+    public String updateStudent(@PathVariable String id,
+                                @RequestParam String firstName, @RequestParam String lastName,
+                                @RequestParam Student.Gender gender, @RequestParam String birthDate,
+                                Model model) {
+        Student student = studentDao.getStudent(id);
+        student.setFirstName(firstName);
+        student.setLastName(lastName);
+        student.setBirthDate(parseDate(birthDate));
+        student.setGender(gender);
+        studentDao.updateStudent(student);
         return getStudents(model);
     }
 
@@ -40,5 +58,9 @@ public class WebAdminController {
     public String deleteStudent(@PathVariable String studentId, Model model) {
         studentDao.deleteStudent(studentId);
         return getStudents(model);
+    }
+
+    private Date parseDate(String dateStr) {
+        return DateTimeUtil.parseDateUTC(dateStr);
     }
 }

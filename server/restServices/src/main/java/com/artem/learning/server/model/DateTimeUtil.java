@@ -14,6 +14,7 @@ public class DateTimeUtil {
 
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS z";
     public static final String DATE_ONLY_FORMAT = "yyyy-MM-dd";
+    public static final String DATE_WITH_TZ_FORMAT = "yyyy-MM-dd z";
 
     public static Date date(int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
@@ -37,9 +38,9 @@ public class DateTimeUtil {
         }
     }
 
-    public static Date parseDateOnly(String str) {
+    public static Date parseDateUTC(String str) {
         try {
-            return new SimpleDateFormat(DATE_ONLY_FORMAT).parse(str);
+            return new SimpleDateFormat(DATE_WITH_TZ_FORMAT).parse(str + " UTC");
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

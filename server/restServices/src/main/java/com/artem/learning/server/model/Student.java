@@ -75,6 +75,26 @@ public class Student extends Document {
         return gender;
     }
 
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
     @JsonIgnore
     public Map<String, StudentCourseAssignment> getCourseAssignments() {
         return courses;

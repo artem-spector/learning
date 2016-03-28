@@ -10,14 +10,26 @@
 <p th:text="'Hello, ' + ${name} + '!'"></p>
 
 <div id="studentList">
-    <div th:each = "student : ${students}"
-         th:onclick="|details_${student.id}.hidden = !details_${student.id}.hidden|">
-        <span th:text="${student.firstName}" onclick="">First name</span>
-        <span th:text="${student.lastName}">Last name</span>
-        <span th:text="${student.age}">Age</span>
-        <span th:text="${student.gender}">Gender</span>
-        <button form="dummyForm" type="submit" formmethod="post" th:formaction="'/console/deleteStudent/' + ${student.id}">Delete</button>
+    <div th:each = "student : ${students}">
+        <div th:onclick="|details_${student.id}.hidden = !details_${student.id}.hidden|">
+            <span th:text="${student.firstName}">First name</span>
+            <span th:text="${student.lastName}">Last name</span>
+        </div>
         <div th:id="'details_' + ${student.id}" hidden="true">
+            Personal details
+            <form th:action="'/console/students/' + ${student.id}" method="post">
+                <fieldset>
+                    <button form="dummyForm" type="submit" formmethod="post" th:formaction="'/console/deleteStudent/' + ${student.id}">Delete</button><br/>
+                    First name: <input type="text" name="firstName" th:value="${student.firstName}"/><br/>
+                    Last name: <input type="text" name="lastName" th:value="${student.lastName}"/><br/>
+                    <input type="radio" name="gender" value="male" th:checked="${#strings.equals(student.gender, 'male')}"/> Male
+                    <input type="radio" name="gender" value="female" th:checked="${#strings.equals(student.gender, 'female')}"/> Female<br/>
+                    Birth date: <input type="date" name="birthDate" th:value="${#dates.format(student.birthDate, 'yyyy-MM-dd')}"/><br/>
+                    Age: <span th:text="${student.age}">10</span><br/>
+                    <input type="submit" value="Update"/>
+                </fieldset>
+            </form>
+
             Assigned courses
         </div>
     </div>
