@@ -38,19 +38,15 @@
             <div id="assignedCourses" th:each="assignedCourse: ${student.courseAssignments}">
                 Assigned courses
                 <div>
-                    <span th:text="${assignedCourse.value.courseDisplayName}">Course name</span>
+                    <span th:text="${assignedCourse.value.courseDisplayName}" >Course name</span>
+                    <button type="button" th:onClick="|unassignCourse('${student.id}', '${assignedCourse.value.courseId}')|">Remove</button>
                 </div>
             </div>
             <div id="availableCourses" th:each="course: ${availableCourses}">
                 Available courses:
                 <div>
-                    <form th:action="'/console/students/assign/' + ${student.id}" method="post">
-                        <fieldset>
-                            <span th:text="${course.displayName}">Course name</span>
-                            <input type="hidden" name="courseId" th:value="${course.id}"/>
-                            <input type="submit" value="Add"/>
-                        </fieldset>
-                    </form>
+                    <span th:text="${course.displayName}">Course name</span>
+                    <button type="button" th:onClick="|assignCourse('${student.id}', '${course.id}')|">Add</button>
                 </div>
                 <div ></div>
             </div>
@@ -76,8 +72,10 @@
 </div>
 
 <div id="invisibleDiv" hidden="hidden">
-    <form id="deleteStudentForm" action="" method="post">
-
+    <form id="dummyForm" action="" method="post">
+        <fieldset>
+            <input id="courseIdFormParam" type="hidden" name="courseId"/>
+        </fieldset>
     </form>
 </div>
 </body>

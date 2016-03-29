@@ -75,6 +75,14 @@ public class WebAdminController {
         return getStudents(model);
     }
 
+    @RequestMapping(path = "/students/unassign/{id}", method = RequestMethod.POST)
+    public String removeCourse(@PathVariable("id") String studentId, @RequestParam("courseId") String courseId, Model model) {
+        Student student = studentDao.getStudent(studentId);
+        student.getCourseAssignments().remove(courseId);
+        studentDao.updateStudent(student);
+        return getStudents(model);
+    }
+
     private Date parseDate(String dateStr) {
         return DateTimeUtil.parseDateUTC(dateStr);
     }
