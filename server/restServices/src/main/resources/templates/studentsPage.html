@@ -21,10 +21,7 @@
             Personal details
             <form th:action="'/console/students/' + ${student.id}" method="post">
                 <fieldset>
-                    <button form="dummyForm" type="submit" formmethod="post"
-                            th:formaction="'/console/deleteStudent/' + ${student.id}">Delete
-                    </button>
-                    <br/>
+                    <button type="button" th:onclick="| deleteStudent('${student.firstName}', '${student.id}') |"> Delete</button> <br/>
                     First name: <input type="text" name="firstName" th:value="${student.firstName}"/><br/>
                     Last name: <input type="text" name="lastName" th:value="${student.lastName}"/><br/>
                     <input type="radio" name="gender" value="male"
@@ -79,7 +76,9 @@
 </div>
 
 <div id="invisibleDiv" hidden="hidden">
-    <form id="dummyForm"></form>
+    <form id="deleteStudentForm" action="" method="post">
+
+    </form>
 </div>
 </body>
 </html>
