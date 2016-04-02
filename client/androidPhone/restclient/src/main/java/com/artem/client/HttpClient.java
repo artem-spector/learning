@@ -19,7 +19,7 @@ import java.util.Map;
 public class HttpClient {
 
 //    private static final String SERVER_IP = "192.168.43.193";
-    private static final String SERVER_IP = "10.100.102.10";
+    private static final String SERVER_IP = "10.100.102.7";
     private String serverUrl = "http://" + SERVER_IP + ":8080";
 
     private ObjectMapper mapper = new ObjectMapper();

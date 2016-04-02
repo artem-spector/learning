@@ -17,4 +17,9 @@ public class HttpResponse {
         this.body = body;
         this.headers = headers;
     }
+
+    @Override
+    public String toString() {
+        return "" + status + ": " + body;
+    }
 }
