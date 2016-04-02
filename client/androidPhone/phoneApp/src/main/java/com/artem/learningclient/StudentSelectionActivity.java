@@ -1,5 +1,6 @@
 package com.artem.learningclient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -9,9 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.artem.client.HttpResponse;
+import com.artem.client.JSONUtil;
 import com.artem.client.RequestBuilder;
 import com.artem.client.ResponseListener;
 import com.artem.client.ServerConnection;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 public class StudentSelectionActivity extends ActionBarActivity {
+
+    public static final String CHOSEN_STUDENT = "student";
+
+    private JSONUtil jsonUtil = new JSONUtil();
 
     private List<Map> students;
     private List<String> studentNames = new ArrayList<>();
@@ -50,7 +57,7 @@ public class StudentSelectionActivity extends ActionBarActivity {
                 studentNames.clear();
                 if (response.status == 200) {
                     try {
-                        students = response.unmarshalList(Map.class);
+                        students = jsonUtil.unmarshalList(response.body, Map.class);
                         for (Map student : students)
                             studentNames.add(displayName(student));
                         adapter.notifyDataSetChanged();
@@ -65,14 +72,22 @@ public class StudentSelectionActivity extends ActionBarActivity {
 
     private void chooseStudent(int idx) {
         String name  = studentNames.get(idx);
-        Map found = null;
+        Map chosen = null;
         for (Map student : students) {
             if (name.equals(displayName(student))) {
-                found = student;
+                chosen = student;
                 break;
             }
         }
-        Log.i(getClass().getSimpleName(), "Student selected: " + name + "; " + (found != null));
+
+        try {
+            String studentStr = jsonUtil.marshal(chosen);
+            Intent intent = new Intent(this, CourseSelectionActivity.class);
+            intent.putExtra(CHOSEN_STUDENT, studentStr);
+            startActivity(intent);
+        } catch (JsonProcessingException e) {
+            Log.e(getClass().getSimpleName(), "Invalid student record ", e);
+        }
     }
 
     private String displayName(Map student) {
