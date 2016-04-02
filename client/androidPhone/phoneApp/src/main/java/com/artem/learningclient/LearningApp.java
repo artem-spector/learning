@@ -16,7 +16,7 @@ public class LearningApp extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning_app);
-        conn = new ServerConnection(this);
+        conn = ServerConnection.getConnection(this);
     }
 
     @Override
@@ -41,11 +41,11 @@ public class LearningApp extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void okPressed(View view) {
+    public void sendDrawing(View view) {
         conn.sendDrawing(getDrawingSurfaceView().getData());
     }
 
-    public void cancelPressed(View view) {
+    public void clearDrawing(View view) {
         getDrawingSurfaceView().clear();
     }
 

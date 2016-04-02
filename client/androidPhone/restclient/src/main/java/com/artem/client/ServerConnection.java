@@ -17,12 +17,41 @@ import java.util.Map;
  */
 public class ServerConnection {
 
+    private static ServerConnection instance;
+
     private HttpClient httpClient;
     private ConnectivityManager connMgr;
 
-    public ServerConnection(Activity activity) {
+    public static ServerConnection getConnection(Activity activity) {
+        if (instance == null) {
+            instance = new ServerConnection(activity);
+        }
+        return instance;
+    }
+
+    private ServerConnection(Activity activity) {
         httpClient = new HttpClient();
         connMgr = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
+
+    public void send(final RequestBuilder req) {
+        if (isOnline()) {
+            new AsyncTask<RequestBuilder, Void, HttpResponse>() {
+
+                @Override
+                protected HttpResponse doInBackground(RequestBuilder... request) {
+                    return httpClient.send(request[0]);
+                }
+
+                @Override
+                protected void onPostExecute(HttpResponse response) {
+                    ResponseListener listener = req.getResponseListener();
+                    if (listener != null) listener.onResponse(response);
+                }
+            }.execute(req);
+        } else {
+            Log.e(getClass().getSimpleName(), "No connectivity, request " + req + " not sent");
+        }
     }
 
     public void sendDrawing(DrawingRawData data) {
@@ -55,4 +84,5 @@ public class ServerConnection {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
+
 }
