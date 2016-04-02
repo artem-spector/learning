@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="Get ready"
         android:id="@+id/stimulus"
         style="@style/Base.TextAppearance.AppCompat.Headline" />
 
