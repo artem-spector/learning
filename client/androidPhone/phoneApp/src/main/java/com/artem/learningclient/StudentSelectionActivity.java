@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class StudentSelectionActivity extends ActionBarActivity {
 
-    public static final String CHOSEN_STUDENT = "student";
+    public static final String CURRENT_STUDENT = "student";
 
     private JSONUtil jsonUtil = new JSONUtil();
 
@@ -83,7 +83,7 @@ public class StudentSelectionActivity extends ActionBarActivity {
         try {
             String studentStr = jsonUtil.marshal(chosen);
             Intent intent = new Intent(this, CourseSelectionActivity.class);
-            intent.putExtra(CHOSEN_STUDENT, studentStr);
+            intent.putExtra(CURRENT_STUDENT, studentStr);
             startActivity(intent);
         } catch (JsonProcessingException e) {
             Log.e(getClass().getSimpleName(), "Invalid student record ", e);

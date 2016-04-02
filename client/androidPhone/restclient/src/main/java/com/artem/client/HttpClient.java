@@ -85,7 +85,8 @@ public class HttpClient {
         String str = "";
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (!str.isEmpty()) str += "&";
-            str += entry.getKey() + "=" + mapper.writeValueAsString(entry.getValue());
+            Object value = entry.getValue();
+            str += entry.getKey() + "=" + (value instanceof String ? value : mapper.writeValueAsString(value));
         }
         return str;
     }
