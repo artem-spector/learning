@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author artem on 2/21/16.
  */
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.artem"})
 public class ServerApp {
 
     public static void main(String[] args) {

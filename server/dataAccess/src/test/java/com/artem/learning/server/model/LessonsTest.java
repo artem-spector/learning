@@ -1,7 +1,7 @@
 package com.artem.learning.server.model;
 
 import com.artem.courses.digits.DigitsWriting;
-import com.artem.learning.server.ServerApp;
+import com.artem.TestApplication;
 import com.artem.learning.server.couchdb.UpdateDocumentResponse;
 import com.artem.learning.server.dao.LessonDao;
 import com.artem.learning.server.dao.StudentDao;
@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
  *         Date: 2/27/16
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ServerApp.class)
+@SpringApplicationConfiguration(classes = TestApplication.class)
 @WebAppConfiguration
 public class LessonsTest {
 

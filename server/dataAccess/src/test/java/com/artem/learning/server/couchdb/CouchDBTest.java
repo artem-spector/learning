@@ -1,6 +1,6 @@
 package com.artem.learning.server.couchdb;
 
-import com.artem.learning.server.ServerApp;
+import com.artem.TestApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  * @author artem on 2/28/16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ServerApp.class)
+@SpringApplicationConfiguration(classes = TestApplication.class)
 @WebAppConfiguration
 public class CouchDBTest {
 

@@ -1,9 +1,8 @@
 package com.artem.learning.server.model;
 
-import com.artem.courses.digits.DigitsWriting;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,14 +13,18 @@ import java.util.List;
 @Component
 public class CourseRepository {
 
+    @Autowired
+    private List<Course> availableCourses;
+
     public List<Course> getAvailableCourses() {
-        ArrayList<Course> courses = new ArrayList<>();
-        courses.add(new DigitsWriting());
-        return courses;
+        return availableCourses;
     }
 
     public Course getCourse(String id) {
-        DigitsWriting res = new DigitsWriting();
-        return id.equals(res.getId()) ? res : null;
+        for (Course course : availableCourses) {
+            if (course.getId().equals(id))
+                return course;
+        }
+        return null;
     }
 }

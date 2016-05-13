@@ -1,6 +1,6 @@
 package com.artem.learning.server.model;
 
-import com.artem.learning.server.ServerApp;
+import com.artem.TestApplication;
 import com.artem.learning.server.couchdb.UpdateDocumentResponse;
 import com.artem.learning.server.dao.StudentDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
  * @author artem on 3/17/16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ServerApp.class)
+@SpringApplicationConfiguration(classes = TestApplication.class)
 @WebAppConfiguration
 public class StudentTest {
 
