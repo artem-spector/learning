@@ -54,29 +54,6 @@ public class ServerConnection {
         }
     }
 
-    public void sendDrawing(DrawingRawData data) {
-        if (isOnline()) {
-            new AsyncTask<DrawingRawData, Void, Void>() {
-                @Override
-                protected Void doInBackground(DrawingRawData... params) {
-                    Log.d(ServerConnection.class.getSimpleName(), "sending drawing");
-                    Map<String, Object> param = new HashMap<>();
-                    param.put("data", params[0]);
-                    HttpResponse res = httpClient.post("/drawing", param);
-
-                    if (res != null && res.status == 200)
-                        Log.d(ServerConnection.class.getSimpleName(), "drawing sent");
-                    else if (res != null)
-                        Log.e(ServerConnection.class.getSimpleName(), res.status + ": " + res.body);
-
-                    return null;
-                }
-            }.execute(data);
-        } else {
-            Log.e(getClass().getSimpleName(), "no connectivity, drawing not sent");
-        }
-    }
-
     public boolean isOnline() {
         Log.d(ServerConnection.class.getSimpleName(), "checking online status");
         if (httpClient == null) return false;

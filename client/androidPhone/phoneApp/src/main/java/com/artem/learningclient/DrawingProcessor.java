@@ -92,7 +92,7 @@ public class DrawingProcessor extends Thread {
 
     public void clear() {
         path.reset();
-        data.clear();
+        data.clear(SystemClock.uptimeMillis());
         nextMotionIdx = 0;
         lastDraw = null;
     }

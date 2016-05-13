@@ -28,6 +28,8 @@ public class LessonActivity extends ActionBarActivity {
     private String courseId;
     private String lessonId;
 
+    private long stimulusPresentedAt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +71,10 @@ public class LessonActivity extends ActionBarActivity {
 
     private void submitTrialData(String dataStr) {
         RequestBuilder req = RequestBuilder.post("/app/lesson/" + lessonId);
-        if (dataStr != null) req.param("trialResponse", dataStr);
+        if (dataStr != null) {
+            req.param("trialResponse", dataStr);
+            req.param("presentedAt", stimulusPresentedAt);
+        }
         req.onResponse(new ResponseListener() {
             @Override
             public void onResponse(HttpResponse response) {
@@ -111,6 +116,7 @@ public class LessonActivity extends ActionBarActivity {
         String stimulus = (String) trialData.get("stimulus");
         getDrawingView().clear();
         getStimulusView().setText(stimulus);
+        stimulusPresentedAt = System.currentTimeMillis();
     }
 
     private TextView getStimulusView() {
