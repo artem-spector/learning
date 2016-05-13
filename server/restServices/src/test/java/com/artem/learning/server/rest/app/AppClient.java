@@ -79,8 +79,10 @@ public class AppClient {
     public void submitLessonRequest(Object trialResponse) throws Exception {
         String path = AppController.APP_LESSON_PATH + "/" + lessonId;
         MockHttpServletRequestBuilder post = post(path);
-        if (trialResponse != null)
+        if (trialResponse != null) {
+            post.param("presentedAt", String.valueOf(System.currentTimeMillis()));
             post.param("trialResponse", mapper.writeValueAsString(trialResponse));
+        }
 
         MvcResult res = invokeAsyncRequest(post)
                 .andDo(print())

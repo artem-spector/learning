@@ -82,10 +82,13 @@ public class LessonsTest {
 
         Lesson lesson = student1Lessons.get(0);
         assertEquals(0, lesson.getNumTrials());
+
+        DrawingRawData drawing = new DrawingRawData();
         while (lesson.hasNextTrial()) {
+            long presentedAt = System.currentTimeMillis();
             Object task = lesson.getNextTask();
-            String response = generateResponse(task);
-            lesson.submitTrialResponse(response);
+            String response = generateResponse(drawing);
+            lesson.submitTrialResponse(presentedAt, response);
         }
         UpdateDocumentResponse updateRes = lessonDao.updateLesson(lesson);
         assertTrue(updateRes.isSuccess());
@@ -96,19 +99,20 @@ public class LessonsTest {
         assertTrue(endTime.getTime() > lesson.getStartTime().getTime());
     }
 
+    private String generateResponse(DrawingRawData drawing) throws JsonProcessingException {
+        long time = System.currentTimeMillis();
+        drawing.clear(time);
+        drawing.add(new MotionData[] {
+                new MotionData(time + 10, 0, 0, MotionData.MotionType.Down),
+                new MotionData(time + 20, 0, 1, MotionData.MotionType.Move),
+                new MotionData(time + 30, 0, 1, MotionData.MotionType.Up)
+        });
+        return mapper.writeValueAsString(drawing);
+    }
+
     private Student saveAndRetrieveStudent(Student student) {
         studentDao.updateStudent(student);
         return studentDao.getStudent(student.getId());
-    }
-
-    private String generateResponse(Object task) throws JsonProcessingException {
-        DrawingRawData drawing = new DrawingRawData();
-        drawing.add(new MotionData[] {
-                new MotionData(System.currentTimeMillis(), 0, 0, MotionData.MotionType.Down),
-                new MotionData(System.currentTimeMillis(), 0, 1, MotionData.MotionType.Move),
-                new MotionData(System.currentTimeMillis(), 0, 1, MotionData.MotionType.Up)
-        });
-        return mapper.writeValueAsString(drawing);
     }
 
     private List<Lesson> getStudentLessons(Student student, Course course) {

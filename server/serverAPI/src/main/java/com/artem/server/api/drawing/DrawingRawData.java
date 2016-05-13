@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,11 +12,19 @@ import java.util.List;
 public class DrawingRawData {
 
     @JsonProperty("motions")
-    private List<MotionData> motions = new ArrayList<>();
+    private List<MotionData> motions;
+
+    @JsonIgnore
+    private long lastTime;
 
     @JsonIgnore
     public synchronized void add(MotionData[] newMotions) {
-        motions.addAll(Arrays.asList(newMotions));
+        for (MotionData motion : newMotions) {
+            long motionTime = motion.time;
+            motion.time -= lastTime;
+            lastTime = motionTime;
+            motions.add(motion);
+        }
     }
 
     @JsonIgnore
@@ -37,8 +44,9 @@ public class DrawingRawData {
     }
 
     @JsonIgnore
-    public void clear() {
+    public void clear(long uptimeMillis) {
         motions = new ArrayList<>();
+        lastTime = uptimeMillis;
     }
 
     @JsonIgnore

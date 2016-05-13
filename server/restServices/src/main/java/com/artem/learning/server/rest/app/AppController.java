@@ -60,7 +60,10 @@ public class AppController {
 
     @RequestMapping(path = LESSON_PATH + "/{lessonId}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public Callable<ResponseEntity<Map<String, Object>>> processLessonRequest(@PathVariable String lessonId, @RequestParam(name = "trialResponse", required = false) String trialResponse) {
+    public Callable<ResponseEntity<Map<String, Object>>> processLessonRequest(
+            @PathVariable String lessonId,
+            @RequestParam(name = "trialResponse", required = false) String trialResponse,
+            @RequestParam(name = "presentedAt", required = false) Long presentedAt) {
         return () -> {
             assert lessonId != null;
             Lesson lesson = lessonDao.getLesson(lessonId);
@@ -69,7 +72,7 @@ public class AppController {
             Map<String, Object> res = new HashMap<>();
 
             if (trialResponse != null) {
-                res.put("trialFeedback", lesson.submitTrialResponse(trialResponse));
+                res.put("trialFeedback", lesson.submitTrialResponse(presentedAt, trialResponse));
             }
 
             if (lesson.hasNextTrial()) {

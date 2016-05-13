@@ -17,18 +17,23 @@ public abstract class Trial {
 
     @JsonProperty
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern=DateTimeUtil.DATE_TIME_FORMAT)
-    private Date creationTime;
+    private Date createdAt;
 
     @JsonProperty
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern=DateTimeUtil.DATE_TIME_FORMAT)
-    private Date responseTime;
+    private Date presentedAt;
+
+    @JsonProperty
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern=DateTimeUtil.DATE_TIME_FORMAT)
+    private Date submittedAt;
 
     public Trial() {
-        creationTime = new Date();
+        createdAt = new Date();
     }
 
-    public Object submitResponse(String responseStr) {
-        responseTime = new Date();
+    public Object submitResponse(long presentedAt, String responseStr) {
+        submittedAt = new Date();
+        this.presentedAt = new Date(presentedAt);
         return setResponseAndGetFeedback(responseStr);
     }
 

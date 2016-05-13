@@ -53,20 +53,21 @@ public class AppLessonTest {
         appClient.chooseCourse(new DigitsWriting().getDisplayName());
         appClient.beginLesson();
         appClient.submitLessonRequest(null);
+        DrawingRawData drawing = new DrawingRawData();
         while (appClient.getNextTrial() != null) {
-            appClient.submitLessonRequest(createDrawing());
+            createDrawing(drawing);
+            appClient.submitLessonRequest(drawing);
         }
     }
 
-    private DrawingRawData createDrawing() {
-        DrawingRawData drawing = new DrawingRawData();
+    private void createDrawing(DrawingRawData drawing) {
+        long time = System.currentTimeMillis();
+        drawing.clear(time);
         drawing.add(new MotionData[] {
-                new MotionData(System.currentTimeMillis(), 0, 0, MotionData.MotionType.Down),
-                new MotionData(System.currentTimeMillis(), 0, 1, MotionData.MotionType.Move),
-                new MotionData(System.currentTimeMillis(), 0, 1, MotionData.MotionType.Up)
+                new MotionData(time + 10, 0, 0, MotionData.MotionType.Down),
+                new MotionData(time + 20, 0, 1, MotionData.MotionType.Move),
+                new MotionData(time + 30, 0, 1, MotionData.MotionType.Up)
         });
-        return drawing;
-
     }
 
     private void adminCreateStudentAndAssignCourse() throws Exception {
