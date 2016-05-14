@@ -57,6 +57,10 @@ public class DigitWritingTrial extends Trial {
         return challenge;
     }
 
+    public DrawingRawData getDrawingData() {
+        return drawing;
+    }
+
     @Override
     protected Object setResponseAndGetFeedback(String responseStr) {
         try {

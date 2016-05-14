@@ -1,13 +1,17 @@
 package com.artem.analysis.ui;
 
+import com.artem.courses.digits.DigitWritingTrial;
 import com.artem.learning.server.model.Lesson;
 import com.artem.learning.server.model.Student;
 import com.artem.learning.server.model.StudentCourseAssignment;
 import com.artem.learning.server.model.Trial;
+import com.artem.server.api.drawing.DrawingRawData;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.util.Map;
 
@@ -60,31 +64,47 @@ public class TrialTreeNode extends DefaultMutableTreeNode {
         else if (lesson != null)
             return dateTimeFormat.format(lesson.getStartTime());
         else if (trial != null)
-            return (String) ((Map)trial.getTask()).get("stimulus");
+            return (String) ((Map) trial.getTask()).get("stimulus");
         else
             throw new IllegalStateException();
     }
 
     public void buildDetailsPanel(JPanel panel) {
-        panel.setLayout(new FlowLayout());
+        panel.setLayout(new BorderLayout());
+        JPanel dataPanel = new JPanel();
+        panel.add(dataPanel, BorderLayout.NORTH);
         if (student != null) {
-            panel.add(new Label("Student"));
-            panel.add(new Label(student.getLastName() + " " + student.getFirstName()));
-            panel.add(new Label(String.valueOf(student.getAge())));
-            panel.add(new Label(student.getGender().name()));
+            dataPanel.add(new Label("Student"));
+            dataPanel.add(new Label(student.getLastName() + " " + student.getFirstName()));
+            dataPanel.add(new Label(String.valueOf(student.getAge())));
+            dataPanel.add(new Label(student.getGender().name()));
         } else if (assignment != null) {
-            panel.add(new Label("Course " + assignment.getCourseDisplayName()));
-            panel.add(new Label("assigned on " + dateFormat.format(assignment.getCreatedAt())));
+            dataPanel.add(new Label("Course " + assignment.getCourseDisplayName()));
+            dataPanel.add(new Label("assigned on " + dateFormat.format(assignment.getCreatedAt())));
         } else if (lesson != null) {
             int durationMin = (int) ((lesson.getEndTime().getTime() - lesson.getStartTime().getTime()) / 60000);
-            panel.add(new Label("Lesson"));
-            panel.add(new Label("Started on " + dateTimeFormat.format(lesson.getStartTime())));
-            panel.add(new Label("Duration " + durationMin + " min."));
+            dataPanel.add(new Label("Lesson"));
+            dataPanel.add(new Label("Started on " + dateTimeFormat.format(lesson.getStartTime())));
+            dataPanel.add(new Label("Duration " + durationMin + " min."));
         } else if (trial != null) {
-            panel.add(new Label("Trial"));
+            dataPanel.add(new Label("Trial"));
             int durationSec = (int) ((trial.getSubmittedAt().getTime() - trial.getPresentedAt().getTime()) / 1000);
-            panel.add(new Label("Presented at " + timeFormat.format(trial.getPresentedAt())));
-            panel.add(new Label("Duration " + durationSec + " sec."));
+            dataPanel.add(new Label("Presented at " + timeFormat.format(trial.getPresentedAt())));
+            dataPanel.add(new Label("Duration " + durationSec + " sec."));
+            if (trial instanceof DigitWritingTrial) {
+                Button playButton = new Button("Play");
+                dataPanel.add(playButton);
+                DrawingRawData drawingData = ((DigitWritingTrial) trial).getDrawingData();
+                final DrawingPlaybackPanel playbackPanel = new DrawingPlaybackPanel(drawingData);
+                panel.add(playbackPanel, BorderLayout.CENTER);
+                playButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        playbackPanel.clear();
+                        playbackPanel.play();
+                    }
+                });
+            }
         }
     }
 }
