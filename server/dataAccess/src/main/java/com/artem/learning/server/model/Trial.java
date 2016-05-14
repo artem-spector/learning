@@ -37,6 +37,14 @@ public abstract class Trial {
         return setResponseAndGetFeedback(responseStr);
     }
 
+    public Date getPresentedAt() {
+        return presentedAt;
+    }
+
+    public Date getSubmittedAt() {
+        return submittedAt;
+    }
+
     public abstract Object getTask();
 
     protected abstract Object setResponseAndGetFeedback(String responseStr);

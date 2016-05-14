@@ -17,7 +17,10 @@ import java.awt.*;
 public class ApplicationFrame extends JFrame implements InitializingBean {
 
     @Autowired
-    private TrialBrowsingPanel form;
+    private TrialTreePanel treePanel;
+
+    @Autowired
+    private TrialDetailsPanel detailsPanel;
 
     public ApplicationFrame() throws HeadlessException {
         super("Analysis application");
@@ -26,7 +29,10 @@ public class ApplicationFrame extends JFrame implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        add(form);
+        JPanel container = new JPanel(new BorderLayout(2, 2));
+        container.add(treePanel, BorderLayout.WEST);
+        container.add(detailsPanel, BorderLayout.CENTER);
+        add(container);
         pack();
         setVisible(true);
     }
