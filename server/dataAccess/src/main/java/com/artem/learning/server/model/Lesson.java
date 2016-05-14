@@ -91,6 +91,10 @@ public abstract class Lesson extends Document {
         return feedback;
     }
 
+    public List<Trial> getTrials() {
+        return trials;
+    }
+
     @JsonIgnore
     public abstract boolean hasNextTrial();
 
